@@ -7,13 +7,15 @@ import {
   Label,
   Metadata,
   RequiredStatement,
-  Summary,
 } from "@samvera/nectar-iiif";
 import Related from "@/components/Related/Related";
 import WorkInner from "@/components/Work/Inner";
 
 export default function Manifest({ manifest }) {
-  const { id, label, metadata, requiredStatement, summary } = manifest;
+  const { id, label, metadata, requiredStatement } = manifest;
+  const artist = metadata.filter(function (x) {
+    if(x.label.en[0] == "Artist" ){return x.value.en[0]}
+  } )[0].value.en[0];
 
   return (
     <Layout>
@@ -29,7 +31,7 @@ export default function Manifest({ manifest }) {
           padding: "0 1.618rem",
         }}
       >
-        <Related label={label} />
+        <Related label={label} artist={artist} />
       </section>
     </Layout>
   );

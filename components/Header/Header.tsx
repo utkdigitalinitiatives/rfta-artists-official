@@ -7,8 +7,7 @@ const title = process.env.title;
 const collection = process.env.collection;
 
 const navItems = [
-  { path: "/", text: "Browse Topics" },
-  { path: "/works", text: "Search Works" },
+  { path: "/", text: "Search Works" },
 ];
 
 const Header = () => {
