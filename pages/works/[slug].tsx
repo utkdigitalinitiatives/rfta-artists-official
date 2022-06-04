@@ -19,16 +19,7 @@ export default function Manifest({ manifest }) {
         <Viewer manifestId={id} />
       </div>
       <WorkInner manifest={manifest} />
-      <section
-        style={{
-          maxWidth: "1280px",
-          margin: "auto",
-          position: "relative",
-          padding: "0 1.618rem",
-        }}
-      >
-        <Related label={label} artist={artist} />
-      </section>
+      <Related label={label} artist={artist} />
     </Layout>
   );
 }
