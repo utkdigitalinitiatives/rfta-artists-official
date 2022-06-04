@@ -1,7 +1,7 @@
 import { styled } from "@/stiches.config";
 
 const StyledArtistDescription = styled("div", {
-  padding: "0px 1.618rem 2rem"
+  padding: "0px"
 });
 
 const StyledArtist = styled("section", {
