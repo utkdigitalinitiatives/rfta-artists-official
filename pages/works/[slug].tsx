@@ -3,16 +3,12 @@ import { client } from "@/pages/api/graphql";
 import Layout from "@/components/layout";
 import Viewer from "@/components/Viewer/Viewer";
 import { Vault } from "@iiif/vault";
-import {
-  Label,
-  Metadata,
-  RequiredStatement,
-} from "@samvera/nectar-iiif";
+
 import Related from "@/components/Related/Related";
 import WorkInner from "@/components/Work/Inner";
 
 export default function Manifest({ manifest }) {
-  const { id, label, metadata, requiredStatement } = manifest;
+  const { id, label, metadata } = manifest;
   const artist = metadata.filter(function (x) {
     if(x.label.en[0] == "Artist" ){return x.value.en[0]}
   } )[0].value.en[0];
