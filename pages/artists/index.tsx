@@ -1,5 +1,4 @@
 import Layout from "../../components/layout";
-import BloomIIIF from "@samvera/bloom-iiif";
 import Artist from "@/components/UTK_Artist/Artist";
 
 export default function Index() {
