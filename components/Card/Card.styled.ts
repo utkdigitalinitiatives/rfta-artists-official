@@ -28,12 +28,12 @@ const Wrapper = styled("div", {
     display: "flex",
     flexDirection: "column",
     width: "100%",
-    color: "$mauve12",
+    color: "$globe",
     textDecoration: "none !important",
     transition: "all 200ms ease-in-out",
 
     [`&:hover, &:focus`]: {
-      color: "$indigo11",
+      color: "$regalia",
 
       figure: {
         transform: "scale3d(1.04, 1.04, 1.04)",
