@@ -9,6 +9,16 @@ const StyledArtist = styled("section", {
   margin: "auto",
   position: "relative",
   padding: "1rem 0 0",
+  color: "$smokeyX",
+
+  h2: {
+    fontSize: "1.5rem",
+  },
+
+  span: {
+    color: "$globe",
+    textDecoration: "underline",
+  },
 
 });
 

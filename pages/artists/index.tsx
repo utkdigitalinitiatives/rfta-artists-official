@@ -36,7 +36,15 @@ export default function Index() {
           padding: "1rem 0 0"
         }}
       >
-        <h1>
+        <h1
+          style={{
+            fontSize: "2rem",
+            color: "$smokey",
+            fontFamily: "$sans",
+            fontWeight: "bold",
+            textDecoration: "underline",
+          }}
+        >
           Meet the Artists
         </h1>
         <Artist artist={artists[0]}/>
