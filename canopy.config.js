@@ -39,6 +39,7 @@ exports.colors = {
   smokey: "#58595B",
   globe: "#006C93",
   regalia: "#754A7E",
+  smokeyX: "#333333",
 };
 
 exports.fonts = {
