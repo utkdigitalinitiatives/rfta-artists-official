@@ -1,13 +1,21 @@
 import { blackA, indigo, mauve, crimson } from "@radix-ui/colors";
 
 import { createStitches } from "@stitches/react";
-
+import { colors } from "./canopy.config";
 export const theme = {
   colors: {
     ...blackA,
     ...indigo,
     ...mauve,
     ...crimson,
+    default: "#000",
+    headings: "red",
+    navbar: "#f00",
+    ...colors,
+  },
+  fonts: {
+    sans: "'Inter', Arial, sans-serif",
+    display: "'Calistoga', 'Inter', Arial, sans-serif",
   },
 };
 

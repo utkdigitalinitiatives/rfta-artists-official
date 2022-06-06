@@ -32,3 +32,16 @@ exports.globals = {
     trim: true,
   },
 };
+
+exports.colors = {
+  tennesseeOrange: "#FF8200",
+  white: "#FFFFFF",
+  smokey: "#58595B",
+  globe: "#006C93",
+  regalia: "#754A7E",
+};
+
+exports.fonts = {
+  // sans: "#000",
+  // serif: "#000",
+};
