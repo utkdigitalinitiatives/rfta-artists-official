@@ -27,7 +27,7 @@ const Wrapper = styled("header", {
 
   [`&  ${Title} a`]: {
     textDecoration: "none",
-    color: "$indigo1",
+    color: "$limestone",
     fontSize: "1.1rem",
     fontFamily: "$sans",
     fontWeight: "bold",

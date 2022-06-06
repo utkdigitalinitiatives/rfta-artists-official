@@ -41,6 +41,7 @@ exports.colors = {
   regalia: "#754A7E",
   smokeyX: "#333333",
   valley: "#00746F",
+  limestone: "#F0EDE3",
 };
 
 exports.fonts = {
