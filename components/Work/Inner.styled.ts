@@ -23,6 +23,9 @@ const StyledWorkInner = styled("section", {
 
       a: {
         color: "$globe",
+      },
+      "a:visited": {
+        color: "$regalia",
       }
     }
   },
