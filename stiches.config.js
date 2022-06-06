@@ -1,7 +1,7 @@
 import { blackA, indigo, mauve, crimson } from "@radix-ui/colors";
 
 import { createStitches } from "@stitches/react";
-import { colors } from "./canopy.config";
+import { colors, fonts } from "./canopy.config";
 export const theme = {
   colors: {
     ...blackA,
@@ -14,7 +14,8 @@ export const theme = {
     ...colors,
   },
   fonts: {
-    sans: "'Inter', Arial, sans-serif",
+    sans: fonts.sans,
+    serif: fonts.serif,
     display: "'Calistoga', 'Inter', Arial, sans-serif",
   },
 };

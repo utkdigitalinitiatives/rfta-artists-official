@@ -40,9 +40,10 @@ exports.colors = {
   globe: "#006C93",
   regalia: "#754A7E",
   smokeyX: "#333333",
+  valley: "#00746F",
 };
 
 exports.fonts = {
-  // sans: "#000",
-  // serif: "#000",
+  sans: "Helvetica, Arial, Sans-serif",
+  serif: "Georgia, Times, Times New Roman, Serif",
 };
