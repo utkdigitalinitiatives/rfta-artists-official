@@ -13,8 +13,8 @@ const Wrapper = styled("header", {
   zIndex: "2",
   top: "0",
   width: "calc(100% - 4rem)",
-  backgroundColor: "$indigo12",
-  background: "linear-gradient(90deg, $mauve12 61.8%, $indigo12 100%)",
+  backgroundColor: "$globe",
+  background: "linear-gradient(90deg, $globe 61.8%, $valley 100%)",
   padding: "1rem 2rem",
   display: "flex",
   flexDirection: "row",
@@ -27,8 +27,10 @@ const Wrapper = styled("header", {
 
   [`&  ${Title} a`]: {
     textDecoration: "none",
-    color: "$indigo1",
-    fontSize: "1rem",
+    color: "$limestone",
+    fontSize: "1.1rem",
+    fontFamily: "$sans",
+    fontWeight: "bold",
   },
 });
 

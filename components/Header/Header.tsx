@@ -8,6 +8,7 @@ const collection = process.env.collection;
 
 const navItems = [
   { path: "/", text: "Search Works" },
+  { path: "/artists", text: "Meet the Artists"},
 ];
 
 const Header = () => {

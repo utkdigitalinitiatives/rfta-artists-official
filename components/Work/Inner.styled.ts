@@ -10,14 +10,28 @@ const StyledWorkInner = styled("section", {
 
   dl: {
     dt: {
-      fontSize: "0.75rem",
+      fontSize: "1rem",
       fontWeight: "bold",
       paddingBottom: "0.5rem",
       textTransform: "uppercase",
+      fontFamily: "$sans",
     },
     dd: {
       marginInlineStart: "0",
       paddingBottom: "1.25rem",
+      fontFamily: "$sans",
+
+      a: {
+        color: "$globe",
+      },
+
+      "a:visited": {
+        color: "$regalia",
+      },
+
+      img: {
+        maxWidth: "25%",
+      }
     }
   },
 });
