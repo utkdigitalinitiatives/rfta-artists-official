@@ -55,8 +55,11 @@ const UTKLogo = styled('div',
 
       ".utk-logo--white": {
         fill: "#fff",
-      }
+      },
 
+      ".utk-logo--smokey": {
+        fill: "$smokey"
+      }
     }
   }
 )
