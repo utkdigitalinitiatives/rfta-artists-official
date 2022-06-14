@@ -5,12 +5,11 @@ const Content = styled("div", {});
 const Title = styled("span", {
   display: "flex",
   flexGrow: "1",
+  alignItems: "center",
   fontWeight: "500",
 });
 
 const Wrapper = styled("header", {
-  position: "fixed",
-  zIndex: "2",
   top: "0",
   width: "calc(100% - 4rem)",
   backgroundColor: "$globe",
