@@ -15,6 +15,7 @@ const WorkInner = ({ manifest }) => {
         <Label label={label} as="h1" />
         <Summary summary={summary} />
         <Metadata metadata={metadata} />
+        <RequiredStatement requiredStatement={requiredStatement} />
       </WorkData>
     </StyledWorkInner>
   );
