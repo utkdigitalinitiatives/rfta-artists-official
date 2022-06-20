@@ -2,11 +2,10 @@ import { styled } from "@/stiches.config";
 
 const UTKUniversalHeader = styled('div',
   {
-    borderTop: "7px solid #ff8200",
+    borderTop: "6px solid #ff8200",
     display: "flex",
     flexDirection: "row",
     fontFamily: "Gotham,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif",
-    boxShadow:"8px 8px 23px rgba(0,0,0,.15)",
     top: "0",
     width: "100%",
   }
@@ -47,7 +46,7 @@ const UTKLogo = styled('div',
       "font-kerning": "normal",
       "font-weight": "400",
       height: "47px",
-      margin: "10px 3rem",
+      margin: "10px 2rem",
 
       polygon: {
         fill: "#ff8200",
