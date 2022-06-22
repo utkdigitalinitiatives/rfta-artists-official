@@ -5,7 +5,8 @@ exports.prod = {
   collection:
     "https://digital.lib.utk.edu/assemble/collection/collections/rftacuratedart",
   title:
-    "Rising from the Ashes: The Chimney Tops 2 Wildfires in Memory and Art",
+    "Rising from the Ashes",
+  subtitle: "The Chimney Tops 2 Wildfires in Memory and Art",
   hero: ["https://digital.lib.utk.edu/assemble/manifest/rftaart/76"],
   metadata: ["Artist", "Subject"],
 };
@@ -17,7 +18,8 @@ exports.dev = {
   collection:
     "https://digital.lib.utk.edu/assemble/collection/collections/rftacuratedart",
   title:
-    "Rising from the Ashes: The Chimney Tops 2 Wildfires in Memory and Art",
+    "Rising from the Ashes",
+  subtitle: "The Chimney Tops 2 Wildfires in Memory and Art",
   hero: ["https://digital.lib.utk.edu/assemble/manifest/rftaart/76"],
   metadata: ["Artist", "Subject"],
 };
@@ -42,9 +44,10 @@ exports.colors = {
   smokeyX: "#333333",
   valley: "#00746F",
   limestone: "#F0EDE3",
+  rock: "#A7A9AC"
 };
 
 exports.fonts = {
-  sans: "Helvetica, Arial, Sans-serif",
+  sans: "Gotham, Helvetica, Arial, Sans-serif",
   serif: "Georgia, Times, Times New Roman, Serif",
 };

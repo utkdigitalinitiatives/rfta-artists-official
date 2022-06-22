@@ -1,12 +1,11 @@
 import { styled } from "@/stiches.config";
 
 const Highlight = styled("div", {
-  backgroundColor: "$indigo11",
-  background: "linear-gradient(90deg, $indigo10 0%, $indigo11 100%)",
+  backgroundColor: "$rock",
   position: "absolute",
   top: "0.25rem",
   left: "0",
-  borderRadius: "2rem",
+  borderRadius: "0.5rem",
   height: "2rem",
   transition: "all 100ms ease-in-out",
 });
@@ -26,10 +25,7 @@ const Items = styled("div", {
     fontWeight: "300",
     position: "relative",
     transition: "all 100ms ease-in-out",
-
-    [`&:hover`]: {
-      color: "$indigo1 !important",
-    },
+    fontSize: "1.2rem",
 
     [`&.active`]: {
       fontWeight: "500",
