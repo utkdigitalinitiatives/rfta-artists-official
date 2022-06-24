@@ -16,7 +16,7 @@
 @font-face {
   font-family: "Gotham";
   src: local("Gotham"),
-  url(public/fonts/Gotham/Gotham-Bold.otf) format("truetype");
+  url(/public/fonts/Gotham/Gotham-Bold.otf) format("truetype");
   font-weight: bold;
 }
 
@@ -63,7 +63,7 @@
 @font-face {
   font-family: "Gotham";
   src: local("Gotham"),
-  url(public/fonts/Gotham/Gotham-Light.otf) format("truetype");
+  url(/public/fonts/Gotham/Gotham-Light.otf) format("truetype");
   font-weight: 300;
 }
 @font-face {
