@@ -1,5 +1,6 @@
 import Layout from "../../components/layout";
 import Artist from "@/components/UTK_Artist/Artist";
+import { StyledAbout } from "@/components/UTK_About/AboutHeading.styled"
 
 export default function Index() {
   const artists = [
@@ -27,22 +28,8 @@ export default function Index() {
 
   return (
     <Layout>
-      <section
-        style={{
-          maxWidth: "1280px",
-          margin: "1rem auto 0",
-          position: "relative",
-          padding: "1rem 0 0"
-        }}
-      >
+      <StyledAbout>
         <h1
-          style={{
-            fontSize: "2rem",
-            color: "$smokey",
-            fontFamily: "$sans",
-            fontWeight: "bold",
-            textDecoration: "underline",
-          }}
         >
           Meet the Artists
         </h1>
@@ -50,7 +37,7 @@ export default function Index() {
         <Artist artist={artists[2]}/>
         <Artist artist={artists[3]}/>
         <Artist artist={artists[1]}/>
-      </section>
+      </StyledAbout>
     </Layout>
   );
 }
