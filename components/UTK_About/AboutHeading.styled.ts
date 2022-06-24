@@ -5,10 +5,16 @@ const StyledAbout = styled("div", {
   margin: "1rem auto 0",
   position: "relative",
   padding: "1rem 0 0",
+  color: "$smokey",
   h1: {
     fontSize: "2.5rem",
-    color: "$smokey",
     textDecoration: "underline",
+  },
+  h2: {
+    fontSize: "2rem",
+  },
+  p: {
+    lineHeight: "2",
   }
 });
 
