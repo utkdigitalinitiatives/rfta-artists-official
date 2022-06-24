@@ -12,7 +12,7 @@ const Artist = ({ artist }) => {
 
   return (
     <StyledArtist>
-      <h2>{artist.name}</h2>
+      <h3>{artist.name}</h3>
       <StyledArtistDescription>
         <strong>{artist.name}</strong> {artist.description}
       </StyledArtistDescription>

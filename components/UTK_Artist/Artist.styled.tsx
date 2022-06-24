@@ -10,9 +10,11 @@ const StyledArtist = styled("section", {
   position: "relative",
   padding: "1rem 0 0",
   color: "$smokeyX",
+  lineHeight: "2",
 
-  h2: {
+  h3: {
     fontSize: "1.5rem",
+    color: "$smokeyX",
   },
 
   span: {
