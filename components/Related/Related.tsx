@@ -24,7 +24,7 @@ const Related = ({ label, artist }) => {
     <StyledRelated>
       <RelatedWrapper>
         <h2>
-          More Like "<Label label={label} as="span" />"
+          More like "<Label label={label} as="span" />"
         </h2>
         <div>
           <BloomIIIF
