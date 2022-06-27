@@ -25,7 +25,8 @@ const Items = styled("div", {
     fontWeight: "300",
     position: "relative",
     transition: "all 100ms ease-in-out",
-    fontSize: "1.2rem",
+    fontSize: "1.1rem",
+    letterSpacing: ".05em",
 
     [`&.active`]: {
       fontWeight: "500",

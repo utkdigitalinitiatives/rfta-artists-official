@@ -37,11 +37,10 @@ export default function Index() {
       >
         <h1
           style={{
-            fontSize: "2rem",
-            color: "$smokey",
-            fontFamily: "$sans",
+            fontSize: "1.5rem",
+            color: "#58595B",
+            fontFamily: "Gotham",
             fontWeight: "bold",
-            textDecoration: "underline",
           }}
         >
           Meet the Artists
