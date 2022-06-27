@@ -14,12 +14,10 @@ const StyledWorkInner = styled("section", {
       fontWeight: "bold",
       paddingBottom: "0.5rem",
       textTransform: "uppercase",
-      fontFamily: "$sans",
     },
     dd: {
       marginInlineStart: "0",
       paddingBottom: "1.25rem",
-      fontFamily: "$sans",
 
       a: {
         color: "$globe",

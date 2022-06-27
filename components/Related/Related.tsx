@@ -1,7 +1,7 @@
 import BloomIIIF from "@samvera/bloom-iiif";
 import { useEffect, useState } from "react";
 import { Label } from "@samvera/nectar-iiif";
-import { StyledRelated, RelatedWrapper } from "@/components/Related/Related.styled"
+import { StyledRelated, RelatedWrapper, OuterStyledRelated } from "@/components/Related/Related.styled"
 
 const Related = ({ label, artist }) => {
   const [baseUrl, setBaseUrl] = useState("");
@@ -21,10 +21,11 @@ const Related = ({ label, artist }) => {
    * @todo: create graphql query to find related (or just 10 random) and IIIF collection endpoint
    */
   return (
+    <OuterStyledRelated>
     <StyledRelated>
       <RelatedWrapper>
         <h2>
-          More Like <Label label={label} as="span" />
+          More like "<Label label={label} as="span" />"
         </h2>
         <div>
           <BloomIIIF
@@ -33,6 +34,7 @@ const Related = ({ label, artist }) => {
         </div>
       </RelatedWrapper>
     </StyledRelated>
+    </OuterStyledRelated>
   );
 };
 export default Related;

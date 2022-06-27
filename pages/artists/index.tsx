@@ -1,5 +1,6 @@
 import Layout from "../../components/layout";
 import Artist from "@/components/UTK_Artist/Artist";
+import { StyledAbout } from "@/components/UTK_About/AboutHeading.styled"
 
 export default function Index() {
   const artists = [
@@ -27,14 +28,7 @@ export default function Index() {
 
   return (
     <Layout>
-      <section
-        style={{
-          maxWidth: "1280px",
-          margin: "1rem auto 0",
-          position: "relative",
-          padding: "1rem 0 0"
-        }}
-      >
+      <StyledAbout>
         <h1
           style={{
             fontSize: "1.5rem",
@@ -43,13 +37,18 @@ export default function Index() {
             fontWeight: "bold",
           }}
         >
-          Meet the Artists
+          About the Project
         </h1>
+        <h2>
+          Summary
+        </h2>
+        <p>On November 23, 2016, an uncontained wilderness fire on the summit of Chimney Tops in the Great Smoky Mountains National Park, aided by winds approaching ninety miles-per-hour, jumped the park boundary and descended upon the tourist town of Gatlinburg, wreaking a level of destruction that was later identified as the deadliest wildfire in the eastern US since the 1940s and one of the largest natural disasters in Tennessee history. Fourteen people perished, more than 200 were injured, and thousands were forced to evacuate. Over 17,000 acres were burned and nearly 2,600 buildings and homes were damaged or destroyed. The social, cultural, economic, political, and natural impacts of this event are still being calculated.</p>
+        <h2>Meet the Artists</h2>
         <Artist artist={artists[0]}/>
         <Artist artist={artists[2]}/>
         <Artist artist={artists[3]}/>
         <Artist artist={artists[1]}/>
-      </section>
+      </StyledAbout>
     </Layout>
   );
 }
