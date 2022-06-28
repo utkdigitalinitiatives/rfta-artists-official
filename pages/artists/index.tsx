@@ -37,14 +37,20 @@ export default function Index() {
         </h2>
         <p>On November 23, 2016, an uncontained wilderness fire on the summit of Chimney Tops in the Great Smoky Mountains National Park, aided by winds approaching ninety miles-per-hour, jumped the park boundary and descended upon the tourist town of Gatlinburg, wreaking a level of destruction that was later identified as the deadliest wildfire in the eastern US since the 1940s and one of the largest natural disasters in Tennessee history. Fourteen people perished, more than 200 were injured, and thousands were forced to evacuate. Over 17,000 acres were burned and nearly 2,600 buildings and homes were damaged or destroyed. The social, cultural, economic, political, and natural impacts of this event are still being calculated.</p>
         <p>Recording the experiences of those who lived through the tragic events of that day and commemorating the heroism and compassion of the community was the objective of Rising from the Ashes, an oral history project of the University of Tennessee Libraries, with support from the city of Gatlinburg and partnership from the Anna Porter Public Library. Drawing inspiration from the interviews recorded by this project, illustrators Paige Braddock, Marshall Ramsey, and Danny Wilson used their skills as graphic artists to further document the experiences of those who were impacted by these events. This work has been generously supported by a grant from the National Endowment for the Arts, specifically their Our Town program, which funds projects that strengthen communities through artistic and creative engagement.</p>
-        <h2>Meet the Artists</h2>
+        <h2>
+          Meet the Artists
+        </h2>
         <Artist artist={artists[0]}/>
         <Artist artist={artists[2]}/>
         <Artist artist={artists[3]}/>
         <Artist artist={artists[1]}/>
-        <h2>Funding</h2>
-        <p><strong>Funding</strong> This project was made possible in part by the National Endowment for the Arts grant 1863142-42-20.</p>
-        <img src="/images/nea.jpg" alt="Anna Porter Public Library Logo" />
+        <h2>
+          Funding
+        </h2>
+        <p><strong>Funding</strong> This project was made possible in part by the <a href="https://www.arts.gov/">National Endowment for the Arts</a> grant 1863142-42-20.</p>
+        <a href="https://www.arts.gov/">
+          <img src="/images/nea.jpg" alt="National Endowment for the Arts" />
+        </a>
       </StyledAbout>
     </Layout>
   );
