@@ -17,8 +17,8 @@ const StyledAbout = styled("div", {
     fontWeight: "400",
     letterSpacing: "0.5px",
     fontStyle: "italic",
-    margin: "0 0 1.5rem 0"
-    
+    margin: "0 0 1.5rem 0",
+    paddingTop: "2rem",
   },
   p: {
     lineHeight: "2",

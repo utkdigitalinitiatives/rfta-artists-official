@@ -19,7 +19,8 @@ const StyledArtist = styled("section", {
     fontSize: "1.2rem",
     color: "#6A6A6A",
     textTransform: "uppercase",
-    margin: "0 0 1rem 0"
+    margin: "0 0 1rem 0",
+    paddingTop: "2rem",
   },
 
   span: {
