@@ -26,22 +26,22 @@ const Subtitle = styled("span", {
 const Wrapper = styled("header", {
   top: "0",
   width: "calc(100% - 4rem)",
-  backgroundColor: "$globe",
-  padding: "1.5rem 2rem",
+  backgroundColor: "$river",
+  padding: "2rem",
   display: "flex",
   flexDirection: "row",
   justifyContent: "space-between",
   boxShadow: "3px 3px 8px #0002",
   fontSize: "1rem",
-  lineHeight: "1.7rem",
+  lineHeight: "2.2rem",
   alignItems: "center",
 
   [`&  ${Title} a`]: {
     textDecoration: "none",
     color: "$limestone",
-    fontSize: "1.4rem",
+    fontSize: "2.2rem",
     fontFamily: "Gotham",
-    letterSpacing: "0.5px"
+    letterSpacing: "0.7px"
   },
 
   [`&  ${Subtitle} a`]: {

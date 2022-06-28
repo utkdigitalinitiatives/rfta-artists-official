@@ -46,6 +46,7 @@ exports.colors = {
   limestone: "#F0EDE3",
   rock: "#A7A9AC",
   gray1: "#F6F6F6",
+  river: "#517C96"
 };
 
 exports.fonts = {

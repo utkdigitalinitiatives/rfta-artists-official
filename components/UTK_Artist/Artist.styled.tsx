@@ -3,21 +3,23 @@ import { styled } from "@/stiches.config";
 const StyledArtistDescription = styled("div", {
   padding: "0px",
   letterSpacing: ".5px",
-  lineHeight: "2"
+  lineHeight: "2",
+  fontSize: "1em",
+  color: "#6A6A6A"
 });
 
 const StyledArtist = styled("section", {
-  maxWidth: "1280px",
+  maxWidth: "100%",
   margin: "auto",
   position: "relative",
-  padding: "2rem 0 0",
-  color: "$smokeyX",
+  color: "$smokeyx",
   boxShadow: "0 15px 10px -15px rgba(51,51,51,.15)",
 
-  h2: {
+  h3: {
     fontSize: "1.2rem",
-    color: "$smokey",
-    textTransform: "uppercase"
+    color: "#6A6A6A",
+    textTransform: "uppercase",
+    margin: "0 0 1rem 0"
   },
 
   span: {

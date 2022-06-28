@@ -29,14 +29,7 @@ export default function Index() {
   return (
     <Layout>
       <StyledAbout>
-        <h1
-          style={{
-            fontSize: "1.5rem",
-            color: "#58595B",
-            fontFamily: "Gotham",
-            fontWeight: "bold",
-          }}
-        >
+        <h1>
           About the Project
         </h1>
         <h2>
