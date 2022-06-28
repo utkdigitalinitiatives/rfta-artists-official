@@ -26,6 +26,9 @@ const StyledAbout = styled("div", {
     color: "#6A6A6A",
     letterSpacing: "0.5px",
     margin: "0 0 3rem 0"
+  },
+  img: {
+    maxWidth: "calc(100% - 4rem)",
   }
 });
 
