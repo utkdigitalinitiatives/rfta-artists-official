@@ -53,7 +53,7 @@ export default function Index({ manifests, metadata }) {
     <Layout>
       <section
         style={{
-          maxWidth: "1280px",
+          maxWidth: "calc(100% - 4rem)",
           margin: "1rem auto 0",
           position: "relative",
         }}

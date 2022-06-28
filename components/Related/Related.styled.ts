@@ -1,12 +1,19 @@
 import { styled } from "@/stiches.config";
 
-const RelatedWrapper = styled("div", { padding: "0 1.618rem 2rem" });
-
-const StyledRelated = styled("section", {
-  maxWidth: "1280px",
-  margin: "auto",
-  position: "relative",
-  padding: "1rem 0 0",
+const RelatedWrapper = styled("div", {
+  padding: "0 1.618rem 2rem",
 });
 
-export { StyledRelated, RelatedWrapper };
+const StyledRelated = styled("div", {
+  margin: "auto",
+  maxWidth: "calc(100% - 4rem)",
+  position: "relative",
+});
+
+const OuterStyledRelated = styled("section", {
+  backgroundColor: "$gray1",
+  paddingTop: "1rem",
+  boxShadow: "inset 0 1px 1px rgba(0, 0, 0, 0.075);",
+});
+
+export { StyledRelated, RelatedWrapper, OuterStyledRelated };

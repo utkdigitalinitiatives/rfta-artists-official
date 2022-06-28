@@ -3,7 +3,7 @@ import { styled } from "@/stiches.config";
 const WorkData = styled("div", { padding: "0 1.618rem 2rem" });
 
 const StyledWorkInner = styled("section", {
-  maxWidth: "1280px",
+  maxWidth: "calc(100% - 4rem)",
   margin: "auto",
   position: "relative",
   padding: "1rem 0 0",
@@ -14,12 +14,10 @@ const StyledWorkInner = styled("section", {
       fontWeight: "bold",
       paddingBottom: "0.5rem",
       textTransform: "uppercase",
-      fontFamily: "$sans",
     },
     dd: {
       marginInlineStart: "0",
       paddingBottom: "1.25rem",
-      fontFamily: "$sans",
 
       a: {
         color: "$globe",

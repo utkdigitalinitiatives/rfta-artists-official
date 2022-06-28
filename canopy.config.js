@@ -44,7 +44,9 @@ exports.colors = {
   smokeyX: "#333333",
   valley: "#00746F",
   limestone: "#F0EDE3",
-  rock: "#A7A9AC"
+  rock: "#A7A9AC",
+  gray1: "#F6F6F6",
+  river: "#517C96"
 };
 
 exports.fonts = {

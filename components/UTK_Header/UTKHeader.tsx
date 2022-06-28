@@ -34,6 +34,9 @@ const UTKHeader = () => {
         <a style={{
           alignItems: "center",
           display: "flex",
+          color: "#6a6a6a",
+          letterSpacing: ".05em",
+          fontWeight: "500"
         }} className="libraries-link" href="https://lib.utk.edu">Libraries</a>
       </UTKHeaderTop>
       <UTKHeaderLinks>
