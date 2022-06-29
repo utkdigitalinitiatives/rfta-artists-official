@@ -7,7 +7,7 @@ const RelatedWrapper = styled("div", {
 
 const StyledRelated = styled("div", {
   margin: "auto",
-  maxWidth: "calc(100% - 4rem)",
+  maxWidth: "100%",
   position: "relative",
 });
 
