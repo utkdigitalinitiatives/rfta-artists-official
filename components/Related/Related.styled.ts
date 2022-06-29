@@ -2,6 +2,7 @@ import { styled } from "@/stiches.config";
 
 const RelatedWrapper = styled("div", {
   padding: "0 1.618rem 2rem",
+  maxWidth: "calc(100% - 4rem)",
 });
 
 const StyledRelated = styled("div", {

@@ -20,6 +20,20 @@ const StyledAbout = styled("div", {
     margin: "0 0 1.5rem 0",
     paddingTop: "2rem",
   },
+  '.about-bordered-heading': {
+    borderTop: "4px solid #ff8200",
+  },
+  footer: {
+    display: "block",
+    textAlign: "center",
+    h2: {
+      fontWeight: "700",
+      fontStyle: "normal",
+    },
+    img: {
+      maxWidth: "calc(100% - 4rem)",
+    }
+  },
   p: {
     lineHeight: "2",
     fontSize: "1em",
@@ -27,9 +41,6 @@ const StyledAbout = styled("div", {
     letterSpacing: "0.5px",
     margin: "0 0 3rem 0"
   },
-  img: {
-    maxWidth: "calc(100% - 4rem)",
-  }
 });
 
 export { StyledAbout };
