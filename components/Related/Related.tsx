@@ -22,18 +22,18 @@ const Related = ({ label, artist }) => {
    */
   return (
     <OuterStyledRelated>
-    <StyledRelated>
-      <RelatedWrapper>
-        <h2>
-          More like "<Label label={label} as="span" />"
-        </h2>
-        <div>
-          <BloomIIIF
-            collectionId={ bloom_values[artist] }
-          />
-        </div>
-      </RelatedWrapper>
-    </StyledRelated>
+      <StyledRelated>
+        <RelatedWrapper>
+          <h2>
+            More like "<Label label={label} as="span" />"
+          </h2>
+          <div>
+            <BloomIIIF
+              collectionId={ bloom_values[artist] }
+            />
+          </div>
+        </RelatedWrapper>
+      </StyledRelated>
     </OuterStyledRelated>
   );
 };
