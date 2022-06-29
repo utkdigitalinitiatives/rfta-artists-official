@@ -29,6 +29,9 @@ const StyledAbout = styled("div", {
     h2: {
       fontWeight: "700",
       fontStyle: "normal",
+    },
+    img: {
+      maxWidth: "calc(100% - 4rem)",
     }
   },
   p: {
@@ -38,9 +41,6 @@ const StyledAbout = styled("div", {
     letterSpacing: "0.5px",
     margin: "0 0 3rem 0"
   },
-  img: {
-    maxWidth: "calc(100% - 4rem)",
-  }
 });
 
 export { StyledAbout };
