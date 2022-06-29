@@ -8,7 +8,7 @@ const Item = styled("div", {
 
 const Wrapper = styled(Masonry, {
   display: "flex",
-  margin: "0 1rem",
+  margin: "0",
   padding: "2rem 0",
   width: "auto",
   position: "relative",

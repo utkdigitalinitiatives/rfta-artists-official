@@ -22,9 +22,9 @@ const Header = () => {
           </Link>
         </Title>
         <Subtitle>
-        <Link href="/">
-          <a>{subtitle}</a>
-        </Link>
+          <Link href="/">
+            <a>{subtitle}</a>
+          </Link>
         </Subtitle>
       </TitleWrapper>
       <div style={{ display: "flex", alignItems: "center" }}>

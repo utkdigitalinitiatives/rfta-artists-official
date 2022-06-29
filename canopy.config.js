@@ -53,3 +53,10 @@ exports.fonts = {
   sans: "Gotham, Helvetica, Arial, Sans-serif",
   serif: "Georgia, Times, Times New Roman, Serif",
 };
+
+exports.breakpoints = {
+  xs: "480px",
+  sm: "768px",
+  md: "992px",
+  lg: "1200px"
+};

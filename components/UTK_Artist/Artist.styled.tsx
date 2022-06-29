@@ -1,7 +1,8 @@
 import { styled } from "@/stiches.config";
 
 const StyledArtistDescription = styled("div", {
-  padding: "0px",
+  padding: "0",
+  margin: "0",
   letterSpacing: ".5px",
   lineHeight: "2",
   fontSize: "1em",
