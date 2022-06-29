@@ -13,7 +13,6 @@ const WorkInner = ({ manifest }) => {
     <StyledWorkInner>
       <WorkData>
         <Label label={label} as="h1" />
-        <Summary summary={summary} />
         <Metadata metadata={metadata} />
         <RequiredStatement requiredStatement={requiredStatement} />
       </WorkData>
