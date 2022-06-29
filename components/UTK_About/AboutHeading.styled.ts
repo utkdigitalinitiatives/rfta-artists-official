@@ -7,39 +7,28 @@ const StyledAbout = styled("div", {
   padding: "1rem 0 0",
   color: "$smokey",
   h1: {
-    fontSize: "2rem",
+    fontSize: "1.8rem",
     color: "#58595B",
     fontWeight: "500",
     margin: "0"
   },
   h2: {
-    fontSize: "1.7rem",
+    fontSize: "1.6rem",
     fontWeight: "400",
     letterSpacing: "0.5px",
     fontStyle: "italic",
-    margin: "0 0 1.5rem 0",
+    margin: "0",
     paddingTop: "2rem",
   },
   '.about-bordered-heading': {
     borderTop: "4px solid #ff8200",
-  },
-  footer: {
-    display: "block",
-    textAlign: "center",
-    h2: {
-      fontWeight: "700",
-      fontStyle: "normal",
-    },
-    img: {
-      maxWidth: "calc(100% - 4rem)",
-    }
   },
   p: {
     lineHeight: "2",
     fontSize: "1em",
     color: "#6A6A6A",
     letterSpacing: "0.5px",
-    margin: "0 0 3rem 0"
+    margin: "1rem 0"
   },
 });
 

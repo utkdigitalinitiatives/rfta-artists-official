@@ -1,6 +1,6 @@
 import Layout from "../../components/layout";
 import Artist from "@/components/UTK_Artist/Artist";
-import { StyledAbout } from "@/components/UTK_About/AboutHeading.styled"
+import { StyledAbout } from "@/components/UTK_About/AboutHeading.styled";
 
 export default function Index() {
   const artists = [
@@ -44,17 +44,6 @@ export default function Index() {
         <Artist artist={artists[2]}/>
         <Artist artist={artists[3]}/>
         <Artist artist={artists[1]}/>
-        <footer>
-          <h2 className="about-bordered-heading">
-            Funding
-          </h2>
-          <p>
-            <strong>Funding</strong> This project was made possible in part by the <a href="https://www.arts.gov/">National Endowment for the Arts</a> grant 1863142-42-20.
-          </p>
-          <a href="https://www.arts.gov/">
-            <img src="/images/nea.jpg" alt="National Endowment for the Arts" />
-          </a>
-        </footer>
       </StyledAbout>
     </Layout>
   );

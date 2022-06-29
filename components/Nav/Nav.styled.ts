@@ -6,7 +6,7 @@ const Highlight = styled("div", {
   top: "0.25rem",
   left: "0",
   borderRadius: "0.5rem",
-  height: "2rem",
+  height: "2.5rem",
   transition: "all 100ms ease-in-out",
 });
 
@@ -25,7 +25,7 @@ const Items = styled("div", {
     fontWeight: "300",
     position: "relative",
     transition: "all 100ms ease-in-out",
-    fontSize: "1.3rem",
+    fontSize: "1.2rem",
     letterSpacing: ".05em",
 
     [`&.active`]: {

@@ -1,4 +1,4 @@
-import { styled } from "@/stiches.config";
+import { styled, media } from "@/stiches.config";
 
 const Content = styled("div", {});
 
@@ -26,7 +26,7 @@ const Subtitle = styled("span", {
 const Wrapper = styled("header", {
   top: "0",
   width: "calc(100% - 4rem)",
-  backgroundColor: "$river",
+  backgroundColor: "$globe",
   padding: "2rem",
   display: "flex",
   flexDirection: "row",
@@ -39,7 +39,7 @@ const Wrapper = styled("header", {
   [`&  ${Title} a`]: {
     textDecoration: "none",
     color: "$limestone",
-    fontSize: "2.2rem",
+    fontSize: "2rem",
     fontFamily: "Gotham",
     letterSpacing: "0.7px"
   },
