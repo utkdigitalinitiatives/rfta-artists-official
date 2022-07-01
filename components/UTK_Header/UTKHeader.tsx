@@ -19,6 +19,8 @@ const UTKHeader = () => {
             <a style={{ margin: "0" }} href="https://utk.edu">
               <Image
                 src={utk_logo}
+                width="444"
+                height="115"
                 priority
                 />
             </a>
