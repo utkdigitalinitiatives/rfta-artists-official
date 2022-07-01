@@ -1,5 +1,7 @@
 import {useEffect, useState} from "react";
 import { UTKUniversalHeader, UTKHeaderTop, UTKLogoWrapper, UTKLogo, UTKHeaderLinks } from "@/components/UTK_Header/UTKHeader.styled"
+import Image from "next/image";
+import utk_logo from "../../public/images/utk-logo.png";
 
 const UTKHeader = () => {
   const [baseUrl, setBaseUrl] = useState("");
@@ -15,7 +17,9 @@ const UTKHeader = () => {
         <UTKLogoWrapper>
           <UTKLogo>
             <a style={{ margin: "0" }} href="https://utk.edu">
-              <img src='/images/utk-logo.png' alt='UTK Logo' />
+              <Image
+                src={utk_logo}
+                />
             </a>
           </UTKLogo>
         </UTKLogoWrapper>
