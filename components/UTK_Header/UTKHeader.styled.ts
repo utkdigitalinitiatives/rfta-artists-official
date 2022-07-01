@@ -45,8 +45,8 @@ const UTKLogo = styled('div',
       "font-family": "Gotham,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif",
       "font-kerning": "normal",
       "font-weight": "400",
-      height: "47px",
-      margin: "10px 2rem",
+      height: "60px",
+      margin: "1px 2rem",
 
       polygon: {
         fill: "#ff8200",
@@ -59,6 +59,10 @@ const UTKLogo = styled('div',
       ".utk-logo--smokey": {
         fill: "$smokey"
       }
+    },
+    img : {
+      height: "47px",
+      margin: "10px 2rem",
     }
   }
 )
