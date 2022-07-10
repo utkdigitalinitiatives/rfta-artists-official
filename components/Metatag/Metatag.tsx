@@ -23,6 +23,8 @@ const Metatag = ({label, summary, thumbnail}) => {
       <meta name="twitter:image" content={thumbnail[0].id} key="twitter-image" />
       <meta name="twitter:image:alt" content={labelValue} key="twitter-image-alt" />
       <meta name="twitter:card" content="summary_large_image" key="twitter-card" />
+      <meta name="twitter:site" content="@utklibraries" key="twitter-site" />
+      <meta name="twitter:creator" content="@utklibraries" key="twitter-creator" />
     </Head>
   );
 };
