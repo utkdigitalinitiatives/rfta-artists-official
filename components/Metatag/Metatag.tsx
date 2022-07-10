@@ -1,4 +1,3 @@
-
 import Head from 'next/head';
 import { getValues } from "@/hooks/getValues";
 import {useEffect, useState} from "react";
