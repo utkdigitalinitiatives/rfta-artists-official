@@ -11,7 +11,6 @@ export default function Layout({ children }) {
     <>
       <Head>
         <link rel="icon" href="/favicon.ico" />
-        <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <UTKHeader/>
       <Header />
