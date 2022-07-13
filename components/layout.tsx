@@ -5,13 +5,11 @@ import UTKHeader from "@/components/UTK_Header/UTKHeader"
 import Footer from "@/components/Footer/Footer";
 import Script from 'next/script'
 
-export const siteTitle = "Next.js Sample Website";
-
 export default function Layout({ children }) {
   return (
     <>
       <Head>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/images/favicon.ico" />
       </Head>
       <UTKHeader/>
       <Header />
