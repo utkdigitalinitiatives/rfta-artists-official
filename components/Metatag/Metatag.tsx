@@ -14,7 +14,7 @@ const Metatag = ({label, summary, thumbnail}) => {
 
   return (
     <Head>
-      <title>labelValue</title>
+      <title>{labelValue}</title>
       <meta property="og:title" content={labelValue} key="title" />
       <meta property="og:description" content={summaryValue} key="summary" />
       <meta property="og:image" content={thumbnail[0].id} key="og-image" />
