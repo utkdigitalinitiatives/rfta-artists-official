@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://rfta-artists.lib.utk.edu/sitemap/sitemap-index.xml
+Sitemap: https://rfta-artists.lib.utk.edu/api/sitemap.xml
 Host: https://rfta-artists.lib.utk.edu
