@@ -10,6 +10,7 @@ export default function Layout({ children }) {
     <>
       <Head>
         <link rel="icon" href="/images/favicon.ico" />
+        <meta name="google-site-verification" content="YieHBoOwo4bDE5mQqxSA_BH60F5zK0ePJns3eqLualA" />
       </Head>
       <UTKHeader/>
       <Header />
