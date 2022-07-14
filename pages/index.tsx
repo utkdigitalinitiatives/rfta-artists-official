@@ -82,7 +82,6 @@ export default function Index({ manifests, metadata }) {
         </Grid>
         <InView
           as="div"
-          onChange={(inView, entry) => handleLoadMore()}
           style={{
             width: "100%",
             height: "50vh",
@@ -95,7 +94,6 @@ export default function Index({ manifests, metadata }) {
             zIndex: "0",
           }}
         >
-          <Grid.LoadMore handleLoadMore={handleLoadMore} />
         </InView>
       </section>
     </Layout>
