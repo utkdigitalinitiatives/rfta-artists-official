@@ -1,10 +1,12 @@
 import { styled } from "@/stiches.config";
 
-const WorkData = styled("div", { padding: "0 1.618rem 2rem" });
+const WorkData = styled("div", { 
+  padding: "0 2rem",
+  maxWidth: "calc(100% - 4rem)"
+});
 
 const StyledWorkInner = styled("section", {
-  maxWidth: "calc(100% - 4rem)",
-  margin: "auto",
+  maxWidth: "100%",
   position: "relative",
   padding: "1rem 0 0",
 

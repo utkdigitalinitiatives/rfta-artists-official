@@ -122,4 +122,25 @@ p {
     flex-direction: column !important;
     text-align: center !important;
   }
+
+  main > div {
+    padding: 0 !important;
+  }
+
+  .clover-header {
+    margin: 1rem 0;
+    justify-content: center !important;
+    align-items: center;
+    flex-direction: row !important;
+  }
+}
+
+.clover-header {
+  margin: 1rem 2rem;
+  padding: 0 !important;
+}
+
+.bloom-header-homepage > span {
+  color: #006C93;
+  text-decoration: underline;
 }

@@ -29,7 +29,7 @@ const Items = styled("div", {
     letterSpacing: ".05em",
 
     [`&.active`]: {
-      fontWeight: "400",
+      fontWeight: "500",
       color: "$limestone",
     },
   },
