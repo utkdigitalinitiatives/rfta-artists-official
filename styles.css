@@ -139,3 +139,8 @@ p {
   margin: 1rem 2rem;
   padding: 0 !important;
 }
+
+.bloom-header-homepage > span {
+  color: #006C93;
+  text-decoration: underline;
+}

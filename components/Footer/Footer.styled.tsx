@@ -14,6 +14,9 @@ const Wrapper = styled("footer", {
       margin: "0",
       letterSpacing: "0.5px"
     },
+    a: {
+      color: "$globe"
+    }
 });
 
 const Funding = styled("div", {
@@ -23,7 +26,8 @@ const Funding = styled("div", {
   alignItems: "center",
   justifyContent: "center",
   p: {
-    color: "$smokey"
+    color: "$smokey",
+    fontWeight: "400"
   },
   img: {
     maxWidth: "275px"
