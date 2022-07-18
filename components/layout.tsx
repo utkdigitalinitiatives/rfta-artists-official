@@ -4,12 +4,16 @@ import Header from "@/components/Header/Header";
 import UTKHeader from "@/components/UTK_Header/UTKHeader"
 import Footer from "@/components/Footer/Footer";
 import Script from 'next/script'
+import { useRouter } from "next/router";
 
 export default function Layout({ children }) {
+  const router = useRouter();
+  const canonicalUrl = (`https://rfta-artists.lib.utk.edu` + (router.asPath === "/" ? "": router.asPath)).split("?")[0];
   return (
     <>
       <Head>
         <link rel="icon" href="/images/favicon.ico" />
+        <link rel="canonical" href={canonicalUrl} />
         <meta name="google-site-verification" content="YieHBoOwo4bDE5mQqxSA_BH60F5zK0ePJns3eqLualA" />
       </Head>
       <UTKHeader/>
