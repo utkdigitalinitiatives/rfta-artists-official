@@ -33,13 +33,6 @@ const Metatag = ({label, summary, thumbnail}) => {
           ]
         }
       }
-      twitter={
-        {
-          site: '@utklibraries',
-          handle: '@utklibraries',
-          cardType: 'summary_large_image'
-        }
-      }
     />
   );
 };

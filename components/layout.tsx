@@ -30,6 +30,13 @@ export default function Layout({ children }) {
             }
           ]
         }
+        twitter={
+          {
+            site: '@utklibraries',
+            handle: '@utklibraries',
+            cardType: 'summary_large_image'
+          }
+        }
       />
       <UTKHeader/>
       <Header />
