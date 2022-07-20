@@ -59,6 +59,10 @@ const UTKLogo = styled('div',
       ".utk-logo--smokey": {
         fill: "$smokey"
       }
+    },
+    img : {
+      height: "47px",
+      margin: "10px 2rem",
     }
   }
 )
