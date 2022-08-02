@@ -10,6 +10,7 @@ const CloverIIIF: React.ComponentType<{ manifestId: string }> = dynamic(
 const options = {
   showTitle: true,
   showIIIFBadge: true,
+  scrollToZoom: false,
 };
 
 const Viewer = ({ manifestId }) => (
