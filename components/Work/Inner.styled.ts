@@ -31,6 +31,8 @@ const StyledWorkInner = styled("section", {
 
       img: {
         maxWidth: "25%",
+        display: "block",
+        maxHeight: "100px",
       },
 
       span: {
