@@ -5,7 +5,6 @@ import Layout from "@/components/layout";
 import { InView } from "react-intersection-observer";
 import { map as lodashMap, groupBy as lodashGroupBy } from "lodash";
 import Grid from "@/components/Grid/Grid";
-import Head from "next/head";
 import {NextSeo} from "next-seo";
 
 const RESULT_LIMIT = 20;
