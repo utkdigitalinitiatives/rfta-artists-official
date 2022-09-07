@@ -53,6 +53,7 @@ export default function Index({ manifests, metadata }) {
   return (
     <Layout>
       <NextSeo
+        title='Home'
         description='Recording the experiences of those who lived through the tragic events of that day and commemorating the heroism and compassion of the community was the objective of Rising from the Ashes, an oral history project of the University of Tennessee Libraries, with support from the city of Gatlinburg and partnership from the Anna Porter Public Library. Drawing inspiration from the interviews recorded by this project, illustrators Paige Braddock, Marshall Ramsey, and Danny Wilson used their skills as graphic artists to further document the experiences of those who were impacted by these events. This work has been generously supported by a grant from the National Endowment for the Arts, specifically their Our Town program, which funds projects that strengthen communities through artistic and creative engagement.'
         openGraph={
           {
