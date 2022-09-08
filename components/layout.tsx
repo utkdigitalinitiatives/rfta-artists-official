@@ -14,6 +14,7 @@ export default function Layout({ children }) {
       <NextSeo
         canonical={canonicalUrl}
         titleTemplate='RFTA: The Chimney Tops 2 Wildfires in Memory and Art | %s'
+        defaultTitle='Rising from the Ashes: The Chimney Tops 2 Wildfires in Memory and Art'
         additionalLinkTags={
           [
             {
