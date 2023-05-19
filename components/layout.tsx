@@ -13,15 +13,22 @@ export default function Layout({ children }) {
   return (
     <>
       <Head>
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-DN6TP2L65T"></script>
-        <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
+          {/* Add your Google Tag Manager script here */}
+          <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-DN6TP2L65T"
+          ></script>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
 
-          gtag('config', 'G-DN6TP2L65T');
-        </script>
+                gtag('config', 'G-DN6TP2L65T');
+              `,
+            }}
+          ></script>
       </Head>
       <NextSeo
         canonical={canonicalUrl}
