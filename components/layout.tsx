@@ -5,7 +5,7 @@ import Footer from "@/components/Footer/Footer";
 import Script from 'next/script'
 import { useRouter } from "next/router";
 import { NextSeo } from 'next-seo';
-import Head fomr 'next/head';
+import Head from 'next/head';
 
 export default function Layout({ children }) {
   const router = useRouter();
