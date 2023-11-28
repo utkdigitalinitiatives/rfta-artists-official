@@ -50,7 +50,7 @@ exports.colors = {
 };
 
 exports.fonts = {
-  sans: "Gotham, Helvetica, Arial, Sans-serif",
+  sans: "Montserrat, Helvetica, Arial, Sans-serif",
   serif: "Georgia, Times, Times New Roman, Serif",
 };
 

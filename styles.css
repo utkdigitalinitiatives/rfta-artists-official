@@ -2,99 +2,99 @@
 @import "@radix-ui/colors/mauve.css";
 
 @font-face {
-  font-family: "Gotham";
-  src: local("Gotham"),
-  url(/fonts/Gotham/Gotham-Book.otf) format("truetype");
+  font-family: "Montserrat";
+  src: local("Montserrat"),
+  url(/fonts/Montserrat/Montserrat-Regular.ttf) format("truetype");
 }
 @font-face {
-  font-family: "Gotham";
+  font-family: "Montserrat";
   src: local("Gotham"),
   url(/fonts/Gotham/Gotham-BookItalic.otf) format("truetype");
   font-style: italic;
 }
 @font-face {
-  font-family: "Gotham";
-  src: local("Gotham"),
-  url(/fonts/Gotham/Gotham-Bold.otf) format("truetype");
+  font-family: "Montserrat";
+  src: local("Montserrat"),
+  url(/fonts/Montserrat/Montserrat-Bold.ttf) format("truetype");
   font-weight: bold;
 }
 
 @font-face {
-  font-family: "Gotham";
-  src: local("Gotham"),
-  url(/fonts/Gotham/Gotham-Black.otf) format("truetype");
+  font-family: "Montserrat";
+  src: local("Montserrat"),
+  url(/fonts/Montserrat/Montserrat-Black.ttf) format("truetype");
   font-weight: 800;
 }
 @font-face {
-  font-family: "Gotham";
-  src: local("Gotham"),
-  url(/fonts/Gotham/Gotham-BlackItalic.otf) format("truetype");
+  font-family: "Montserrat";
+  src: local("Montserrat"),
+  url(/fonts/Montserrat/Montserrat-BlackItalic.ttf) format("truetype");
   font-weight: 800;
   font-style: italic;
 }
 @font-face {
-  font-family: "Gotham";
-  src: local("Gotham"),
-  url(/fonts/Gotham/Gotham-BoldItalic.otf) format("truetype");
+  font-family: "Montserrat";
+  src: local("Montserrat"),
+  url(/fonts/Montserrat/Montserrat-BoldItalic.ttf) format("truetype");
   font-style: italic;
   font-weight: 700;
 }
 @font-face {
-  font-family: "Gotham";
-  src: local("Gotham"),
-  url(/fonts/Gotham/Gotham-BoldItalic.otf) format("truetype");
+  font-family: "Montserrat";
+  src: local("Montserrat"),
+  url(/fonts/Montserrat/Montserrat-BoldItalic.ttf) format("truetype");
   font-style: italic;
   font-weight: 700;
 }
 @font-face {
-  font-family: "Gotham";
-  src: local("Gotham"),
-  url(/fonts/Gotham/Gotham-Medium.otf) format("truetype");
+  font-family: "Montserrat";
+  src: local("Montserrat"),
+  url(/fonts/Montserrat/Montserrat-Medium.ttf) format("truetype");
   font-weight: 500;
 }
 @font-face {
-  font-family: "Gotham";
-  src: local("Gotham"),
-  url(/fonts/Gotham/Gotham-MediumItalic.otf) format("truetype");
+  font-family: "Montserrat";
+  src: local("Montserrat"),
+  url(/fonts/Montserrat/Montserrat-MediumItalic.ttf) format("truetype");
   font-weight: 500;
   font-style: italic;
 }
 @font-face {
-  font-family: "Gotham";
-  src: local("Gotham"),
-  url(/fonts/Gotham/Gotham-Light.otf) format("truetype");
+  font-family: "Montserrat";
+  src: local("Montserrat"),
+  url(/fonts/Montserrat/Montserrat-Light.ttf) format("truetype");
   font-weight: 300;
 }
 @font-face {
-  font-family: "Gotham";
-  src: local("Gotham"),
-  url(/fonts/Gotham/Gotham-LightItalic.otf) format("truetype");
+  font-family: "Montserrat";
+  src: local("Montserrat"),
+  url(/fonts/Montserrat/Montserrat-LightItalic.ttf) format("truetype");
   font-weight: 300;
   font-style: italic;
 }
 @font-face {
-  font-family: "Gotham";
-  src: local("Gotham"),
-  url(/fonts/Gotham/Gotham-Thin.otf) format("truetype");
+  font-family: "Montserrat";
+  src: local("Montserrat"),
+  url(/fonts/Montserrat/Montserrat-Thin.ttf) format("truetype");
   font-weight: 200;
 }
 @font-face {
-  font-family: "Gotham";
-  src: local("Gotham"),
-  url(/fonts/Gotham/Gotham-ThinItalic.otf) format("truetype");
+  font-family: "Montserrat";
+  src: local("Montserrat"),
+  url(/fonts/Montserrat/Montserrat-ThinItalic.ttf) format("truetype");
   font-weight: 200;
   font-style: italic;
 }
 @font-face {
-  font-family: "Gotham";
-  src: local("Gotham"),
-  url(/fonts/Gotham/Gotham-XLight.otf) format("truetype");
+  font-family: "Montserrat";
+  src: local("Montserrat"),
+  url(/fonts/Montserrat/Montserrat-ExtraLight.ttf) format("truetype");
   font-weight: 100;
 }
 @font-face {
-  font-family: "Gotham";
-  src: local("Gotham"),
-  url(/fonts/Gotham/Gotham-XLightItalic.otf) format("truetype");
+  font-family: "Montserrat";
+  src: local("Montserrat"),
+  url(/fonts/Montserrat/Montserrat-ExtraLightItalic.ttf) format("truetype");
   font-weight: 100;
   font-style: italic;
 }
@@ -104,7 +104,7 @@ html {
 }
 
 body {
-  font-family: "Gotham", "Readex Pro", -apple-system, "Helvetica", sans-serif;
+  font-family: "Montserrat", "Readex Pro", -apple-system, "Helvetica", sans-serif;
   font-weight: 300;
   letter-spacing: -0.01em;
   margin: 0;
