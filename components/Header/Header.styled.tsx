@@ -40,7 +40,7 @@ const Wrapper = styled("header", {
     textDecoration: "none",
     color: "$limestone",
     fontSize: "2rem",
-    fontFamily: "Gotham",
+    fontFamily: "Montserrat",
     letterSpacing: "0.7px"
   },
 

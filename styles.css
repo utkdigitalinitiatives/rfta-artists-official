@@ -8,8 +8,8 @@
 }
 @font-face {
   font-family: "Montserrat";
-  src: local("Gotham"),
-  url(/fonts/Gotham/Gotham-BookItalic.otf) format("truetype");
+  src: local("Montserrat"),
+  url(/fonts/Montserrat/Montserrat-Italic.ttf) format("truetype");
   font-style: italic;
 }
 @font-face {

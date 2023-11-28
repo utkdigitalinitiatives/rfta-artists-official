@@ -5,7 +5,7 @@ const UTKUniversalHeader = styled('div',
     borderTop: "6px solid #ff8200",
     display: "flex",
     flexDirection: "row",
-    fontFamily: "Gotham,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif",
+    fontFamily: "Montserrat,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif",
     top: "0",
     width: "100%",
   }
@@ -18,7 +18,7 @@ const UTKHeaderTop = styled('div',
 
     a: {
       color: "$smokey",
-      fontFamily: "Gotham SSm\ 2r,Gotham SSm A,Gotham SSm B,Helvetica Neue,Helvetica,Arial,sans-serif",
+      fontFamily: "Montserrat SSm\ 2r,Montserrat SSm A,Montserrat SSm B,Helvetica Neue,Helvetica,Arial,sans-serif",
       fontSize: "1.2777rem",
       fontWeight: "700",
       letterSpacing: "-.03rem",
@@ -42,7 +42,7 @@ const UTKLogo = styled('div',
   {
     svg: {
       color: "#313e48",
-      "font-family": "Gotham,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif",
+      "font-family": "Montserrat,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif",
       "font-kerning": "normal",
       "font-weight": "400",
       height: "47px",
