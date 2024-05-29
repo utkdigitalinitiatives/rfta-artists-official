@@ -8,6 +8,7 @@ const GridItem = ({ data }) => {
   const [item, setItem] = useState();
 
   useEffect(() => {
+    let isMounted = true;
     getJsonByURI(data.id).then((json) => {
       setItem(json);
     });
@@ -19,11 +20,14 @@ const GridItem = ({ data }) => {
 
   /**
    * @todo: handle this better
+   * 29 May 2024 -- Updated to check for undefined in the first array item
    */
-  if (item.items) resource = item.items[0].items[0].items[0].body;
-
-  if (item.sequences)
+  if (item.items[0] !== undefined) { 
+    resource = item.items[0].items[0].items[0].body
+  };
+  if (item.sequences) {
     resource = item.sequences[0].canvases[0].images[0].resource;
+  }
 
   return (
     <Item className="can-grid-column">
