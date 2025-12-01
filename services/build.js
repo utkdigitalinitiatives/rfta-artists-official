@@ -2,7 +2,7 @@ const axios = require("axios");
 const slugify = require("slugify");
 
 exports.getRootCollection = (id) =>
-  fetch(id).then((response) => response.json());
+  axios.get(id).then((response) => response.data);
 
 exports.getBulkManifests = async (items, chunkSize) =>
   await chunks(
