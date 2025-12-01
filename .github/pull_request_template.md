@@ -10,6 +10,4 @@ _Please include a summary of the changes and the related issue. Please also incl
 - [ ] 🚧 **Maintenance or refinement of codebase structur**e (ex: dependency updates)
 - [ ] 📘 **Documentation update**
 
-## Additional Notes
 
-_Please include any extra notes here._
