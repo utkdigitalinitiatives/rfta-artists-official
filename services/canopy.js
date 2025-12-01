@@ -27,13 +27,19 @@ module.exports.buildCanopy = async (env) => {
       fsSync.mkdirSync(canopyDirectory);
     }
   } catch (err) {
-    console.error(err);
+    console.error("Error creating .canopy directory:", err);
+    throw err;
   }
 
-  await fs.writeFile(
-    `${canopyDirectory}/collections.json`,
-    JSON.stringify([canopyCollection])
-  );
+  try {
+    await fs.writeFile(
+      `${canopyDirectory}/collections.json`,
+      JSON.stringify([canopyCollection])
+    );
+  } catch (err) {
+    console.error("Error writing collections.json:", err);
+    throw err;
+  }
 
   /**
    * create manifest listing
@@ -54,16 +60,28 @@ module.exports.buildCanopy = async (env) => {
       };
   });
 
-  await fs.writeFile(
-    `${canopyDirectory}/manifests.json`,
-    JSON.stringify(canopyManifests)
-  );
+  try {
+    await fs.writeFile(
+      `${canopyDirectory}/manifests.json`,
+      JSON.stringify(canopyManifests)
+    );
+  } catch (err) {
+    console.error("Error writing manifests.json:", err);
+    throw err;
+  }
 
   /**
    * flatten metadata
    */
   console.log(`Flattening prescribed metadata...`);
-  const manifests = await getBulkManifests(canopyManifests, 25);
+
+  let manifests;
+  try {
+    manifests = await getBulkManifests(canopyManifests, 25);
+  } catch (err) {
+    console.error("Error fetching manifests:", err);
+    throw err;
+  }
 
   let canopyMetadata = [];
   manifests
@@ -88,8 +106,13 @@ module.exports.buildCanopy = async (env) => {
       })
     );
 
-  await fs.writeFile(
-    `${canopyDirectory}/metadata.json`,
-    JSON.stringify(canopyMetadata)
-  );
+  try {
+    await fs.writeFile(
+      `${canopyDirectory}/metadata.json`,
+      JSON.stringify(canopyMetadata)
+    );
+  } catch (err) {
+    console.error("Error writing metadata.json:", err);
+    throw err;
+  }
 };
