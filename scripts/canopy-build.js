@@ -6,11 +6,13 @@ const env = {
     ...config.prod,
 };
 
-console.log("Building Canopy data files...");
-canopy.buildCanopy(env);
-
-// Give async operations time to complete
-setTimeout(() => {
-    console.log("Canopy build complete!");
-    process.exit(0);
-}, 10000);
+(async () => {
+    try {
+        console.log("Building Canopy data files...");
+        await canopy.buildCanopy(env);
+        console.log("Canopy build complete!");
+    } catch (error) {
+        console.error("Error building Canopy:", error);
+        process.exit(1);
+    }
+})();
