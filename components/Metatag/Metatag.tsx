@@ -1,13 +1,14 @@
 import Head from 'next/head';
 import { getValues } from "@/hooks/getValues";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { NextSeo } from 'next-seo';
 import { useRouter } from "next/router";
+import { normalizeIiifUrl } from "@/hooks/normalizeIiifUrl";
 
-const Metatag = ({label, summary, thumbnail}) => {
+const Metatag = ({ label, summary, thumbnail }) => {
   const [baseUrl, setBaseUrl] = useState("");
   const router = useRouter();
-  const canonicalUrl = (`https://rfta-artists.lib.utk.edu` + (router.asPath === "/" ? "": router.asPath)).split("?")[0];
+  const canonicalUrl = (`https://rfta-artists.lib.utk.edu` + (router.asPath === "/" ? "" : router.asPath)).split("?")[0];
   const labelValue = getValues(label);
   const summaryValue = getValues(summary);
   useEffect(() => {
@@ -27,7 +28,7 @@ const Metatag = ({label, summary, thumbnail}) => {
           url: canonicalUrl,
           images: [
             {
-              url: thumbnail[0].id,
+              url: normalizeIiifUrl(thumbnail?.[0]?.id),
               alt: `Image of ${labelValue}`
             }
           ]
