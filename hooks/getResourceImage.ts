@@ -1,20 +1,60 @@
-export const getResourceImage = (resource, size = "600,", region = "full") => {
-  if (Array.isArray(resource)) resource = resource[0];
+type IIIFResourceLike = {
+  id?: string;
+  "@id"?: string;
+  service?: IIIFServiceLike | IIIFServiceLike[];
+};
 
-  let image = resource.id;
+type IIIFServiceLike = {
+  id?: string;
+  "@id"?: string;
+};
 
-  if (!resource.service) return resource.id;
+type ResourceInput =
+  | string
+  | IIIFResourceLike
+  | Array<string | IIIFResourceLike>
+  | null
+  | undefined;
 
-  if (!Array.isArray(resource.service)) {
-    if (resource.service["@id"])
-      return `${resource.service["@id"]}/${region}/${size}/0/default.jpg`;
+const normalizeUrl = (value?: string): string | undefined =>
+  typeof value === "string" ? value.replace(/^http:\/\//i, "https://") : value;
 
-    if (resource.service.id)
-      return `${resource.service.id}/${region}/${size}/0/default.jpg`;
+const normalizeDatastreamFallback = (value?: string): string | undefined => {
+  if (typeof value !== "string") return value;
+
+  // If a manifest points to an OBJ datastream (often TIFF), use the TN derivative for cards.
+  if (value.includes("/datastream/OBJ")) {
+    return value.replace("/datastream/OBJ", "/datastream/TN");
   }
 
-  if (resource.service[0]["@id"])
-    return `${resource.service[0]["@id"]}/${region}/${size}/0/default.jpg`;
+  return value;
+};
 
-  return `${resource.service[0].id}/${region}/${size}/0/default.jpg`;
+export const getResourceImage = (
+  resource: ResourceInput,
+  size: string = "600,",
+  region: string = "full",
+) => {
+  if (!resource) return "";
+  if (Array.isArray(resource)) resource = resource[0];
+
+  if (typeof resource === "string") {
+    return normalizeUrl(normalizeDatastreamFallback(resource));
+  }
+
+  const resourceId = normalizeUrl(
+    normalizeDatastreamFallback(resource.id || resource["@id"]),
+  );
+
+  if (!resource.service) return resourceId || "";
+
+  const service = Array.isArray(resource.service)
+    ? resource.service[0]
+    : resource.service;
+
+  const serviceId = normalizeUrl(service?.id || service?.["@id"]);
+
+  if (!serviceId) return resourceId || "";
+
+  return `${serviceId}/${region}/${size}/0/default.jpg`;
 };
