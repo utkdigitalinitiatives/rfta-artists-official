@@ -8,17 +8,31 @@ const fetchJsonWithRetry = async (url, retries = 3, backoffMs = 750) => {
 
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      const response = await axios.get(url);
+      const response = await axios.get(url, {
+        headers: {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+          "Accept": "application/json",
+          "Accept-Language": "en-US,en;q=0.9",
+        },
+        timeout: 10000,
+      });
+
+      // Detect if we got HTML instead of JSON (Anubis bot detection)
+      if (typeof response.data === "string" && response.data.includes("<!doctype")) {
+        throw new Error("Received HTML instead of JSON (bot detection page)");
+      }
+
       return response.data;
     } catch (error) {
       lastError = error;
       const status = error?.response?.status;
-      const isRetryable = !status || status >= 500 || status === 429;
+      const isRetryable = !status || status >= 500 || status === 429 || error.message?.includes("HTML");
 
       if (!isRetryable || attempt === retries) {
         break;
       }
 
+      console.log(`Retry attempt ${attempt}/${retries} for ${url} after ${backoffMs * attempt}ms...`);
       await delay(backoffMs * attempt);
     }
   }

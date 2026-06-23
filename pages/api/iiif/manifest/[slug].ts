@@ -95,7 +95,21 @@ export default async function handler(
   }
 
   try {
-    const { data } = await axios.get(index.id);
+    const { data } = await axios.get(index.id, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        "Accept": "application/json",
+        "Accept-Language": "en-US,en;q=0.9",
+      },
+      timeout: 10000,
+    });
+
+    // Detect if we got HTML instead of JSON (Anubis bot detection)
+    if (typeof data === "string" && data.includes("<!doctype")) {
+      console.error(`[iiif/manifest/${slug}] Received HTML bot-detection page instead of JSON from ${index.id}`);
+      return res.status(502).json({ error: "Upstream service returned bot-detection page. Please retry." });
+    }
+
     const patchedManifest = patchManifest(JSON.parse(JSON.stringify(data)));
 
     res.setHeader(
@@ -104,6 +118,8 @@ export default async function handler(
     );
     return res.status(200).json(patchedManifest);
   } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error(`[iiif/manifest/${slug}] Error: ${errorMsg}`);
     return res.status(502).json({ error: "Failed to load source manifest." });
   }
 }
