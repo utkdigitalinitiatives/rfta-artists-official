@@ -22,6 +22,16 @@ module.exports.buildCanopy = async (env) => {
   console.log(`Generating collection data...`);
   const canopyCollection = buildCanopyCollection(json, 0, null);
 
+  if (
+    !canopyCollection ||
+    !Array.isArray(canopyCollection.items) ||
+    canopyCollection.items.length === 0
+  ) {
+    throw new Error(
+      `Canopy root collection returned no items. Source: ${env.collection}`,
+    );
+  }
+
   try {
     if (!fsSync.existsSync(canopyDirectory)) {
       fsSync.mkdirSync(canopyDirectory);
@@ -34,7 +44,7 @@ module.exports.buildCanopy = async (env) => {
   try {
     await fs.writeFile(
       `${canopyDirectory}/collections.json`,
-      JSON.stringify([canopyCollection])
+      JSON.stringify([canopyCollection]),
     );
   } catch (err) {
     console.error("Error writing collections.json:", err);
@@ -45,25 +55,23 @@ module.exports.buildCanopy = async (env) => {
    * create manifest listing
    */
   console.log(`Creating manifest listing...`);
-  const canopyManifests = canopyCollection.items.map((item) => {
-    /**
-     * what should label look like at this point?
-     * language for label?
-     * are they unique?
-     */
-    if (item.type === "Manifest")
-      return {
-        collectionId: item.parent,
-        id: item.id,
-        label: item.label,
-        slug: slugify(item.label[0], env.slugify),
-      };
-  });
+  const canopyManifests = canopyCollection.items
+    .filter((item) => item.type === "Manifest")
+    .map((item) => ({
+      collectionId: item.parent,
+      id: item.id,
+      label: item.label,
+      slug: slugify(item.label[0], env.slugify),
+    }));
+
+  if (canopyManifests.length === 0) {
+    throw new Error(`Canopy manifest list is empty. Source: ${env.collection}`);
+  }
 
   try {
     await fs.writeFile(
       `${canopyDirectory}/manifests.json`,
-      JSON.stringify(canopyManifests)
+      JSON.stringify(canopyManifests),
     );
   } catch (err) {
     console.error("Error writing manifests.json:", err);
@@ -81,6 +89,12 @@ module.exports.buildCanopy = async (env) => {
   } catch (err) {
     console.error("Error fetching manifests:", err);
     throw err;
+  }
+
+  if (!Array.isArray(manifests) || manifests.length === 0) {
+    throw new Error(
+      `No manifests were fetched from canopy manifest listing. Source: ${env.collection}`,
+    );
   }
 
   let canopyMetadata = [];
@@ -103,13 +117,13 @@ module.exports.buildCanopy = async (env) => {
             canopyMetadata.push(result);
           });
         }
-      })
+      }),
     );
 
   try {
     await fs.writeFile(
       `${canopyDirectory}/metadata.json`,
-      JSON.stringify(canopyMetadata)
+      JSON.stringify(canopyMetadata),
     );
   } catch (err) {
     console.error("Error writing metadata.json:", err);
