@@ -3,17 +3,67 @@ const slugify = require("slugify");
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+const normalizeJsonResponse = (response, url) => {
+  const data = response?.data;
+
+  if (data && typeof data === "object") {
+    return data;
+  }
+
+  if (typeof data === "string") {
+    const trimmed = data.trim();
+
+    if (!trimmed) {
+      const err = new Error(`Empty response body from ${url}`);
+      err.retryable = true;
+      throw err;
+    }
+
+    if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+      try {
+        return JSON.parse(trimmed);
+      } catch (error) {
+        const err = new Error(
+          `Invalid JSON returned by ${url}: ${error.message}`,
+        );
+        err.retryable = true;
+        throw err;
+      }
+    }
+
+    const contentType = response?.headers?.["content-type"] || "unknown";
+    const preview = trimmed.replace(/\s+/g, " ").slice(0, 180);
+    const err = new Error(
+      `Non-JSON response from ${url} (content-type: ${contentType}). Preview: ${preview}`,
+    );
+    err.retryable = true;
+    throw err;
+  }
+
+  const err = new Error(`Unexpected response type from ${url}: ${typeof data}`);
+  err.retryable = true;
+  throw err;
+};
+
 const fetchJsonWithRetry = async (url, retries = 3, backoffMs = 750) => {
   let lastError;
 
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      const response = await axios.get(url);
-      return response.data;
+      const response = await axios.get(url, {
+        timeout: 15000,
+        headers: {
+          Accept: "application/ld+json, application/json;q=0.9, */*;q=0.1",
+          "User-Agent":
+            "rfta-canopy-build/1.0 (+https://github.com/utkdigitalinitiatives/rfta-artists-official)",
+        },
+      });
+      return normalizeJsonResponse(response, url);
     } catch (error) {
       lastError = error;
       const status = error?.response?.status;
-      const isRetryable = !status || status >= 500 || status === 429;
+      const isRetryable =
+        error?.retryable === true || !status || status >= 500 || status === 429;
 
       if (!isRetryable || attempt === retries) {
         break;
@@ -29,11 +79,7 @@ const fetchJsonWithRetry = async (url, retries = 3, backoffMs = 750) => {
 exports.getRootCollection = (id) => fetchJsonWithRetry(id);
 
 exports.getBulkManifests = async (items, chunkSize) =>
-  await chunks(
-    items,
-    async (item) => fetchJsonWithRetry(item.id),
-    chunkSize
-  );
+  await chunks(items, async (item) => fetchJsonWithRetry(item.id), chunkSize);
 
 exports.buildCanopyCollection = (json, depth, parent = null) => {
   if (!json) return null;
@@ -123,7 +169,7 @@ const buildCollectionItems2 = (json, parent) => {
         item.label = getLabel(item.label);
         item.parent = parent;
         return item;
-      })
+      }),
     );
 
   if (json.manifests)
@@ -140,7 +186,7 @@ const buildCollectionItems2 = (json, parent) => {
         item.label = getLabel(item.label);
         item.parent = parent;
         return item;
-      })
+      }),
     );
 
   return {
@@ -170,7 +216,7 @@ const buildCollectionItems3 = (json, parent) => {
         delete item.thumbnail;
 
         return item;
-      })
+      }),
     );
 
   return {
@@ -218,7 +264,6 @@ exports.getValues = (values, language = "none") => {
    */
   return values[language];
 };
-
 
 function all(items, fn) {
   const promises = items.map((item, index) => {
