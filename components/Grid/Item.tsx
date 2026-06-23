@@ -41,14 +41,20 @@ const GridItem = ({ data }: { data: GridItemData }) => {
 
   useEffect(() => {
     let isMounted = true;
-    getJsonByURI(data.id).then((json: ManifestLike) => {
-      if (isMounted) setItem(json);
-    });
+    const manifestUrl = `/api/iiif/manifest/${data.slug}`;
+
+    getJsonByURI(manifestUrl)
+      .then((json: ManifestLike) => {
+        if (isMounted) setItem(json);
+      })
+      .catch(() => {
+        if (isMounted) setItem(null);
+      });
 
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [data.slug]);
 
   let resource: IIIFResource | null = null;
 
