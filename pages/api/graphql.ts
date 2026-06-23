@@ -8,6 +8,15 @@ import CANOPY_COLLECTIONS from "@/.canopy/collections.json";
 import CANOPY_MANIFESTS from "@/.canopy/manifests.json";
 import CANOPY_METADATA from "@/.canopy/metadata.json";
 
+type CanopyManifest = {
+  id?: string;
+  slug?: string;
+  label?: string[];
+  metadata?: unknown[];
+};
+
+const manifests = CANOPY_MANIFESTS as CanopyManifest[];
+
 const typeDefs = gql`
   type Query {
     collections: [Collection]
@@ -60,7 +69,7 @@ const resolvers = {
       return (CANOPY_COLLECTIONS as any).items || [];
     },
     manifests: async (_: any, { limit, offset, id }: { limit?: number; offset?: number; id?: string[] }, context: any) => {
-      return CANOPY_MANIFESTS;
+      return manifests;
     },
 
     metadata: async (_: any, { id, label }: { id?: string; label?: string }, context: any) => {
@@ -68,15 +77,17 @@ const resolvers = {
     },
 
     getManifest: async (_: any, { slug }: { slug: string }, context: any) => {
-      return CANOPY_MANIFESTS.filter(
-        (item) =>
+      return manifests.find((item) => {
+        const label = item.label?.[0] || "";
+        return (
           slug ===
-          slugify(item.label[0], {
+          slugify(label, {
             lower: true,
             strict: true,
             trim: true,
           })
-      )[0];
+        );
+      });
     },
   },
 };

@@ -61,7 +61,7 @@ export default function Index({ manifests, metadata }: { manifests: any; metadat
         {/* <Filter /> */}
         <Grid>
           {results &&
-             results.map((result: any, i: number) => {
+            results.map((result: any, i: number) => {
               return <Grid.Item data={result} key={result.id} />;
             })}
         </Grid>

@@ -30,8 +30,8 @@ const Hero = () => {
   if (hero.items) resource = hero.items?.[0]?.items?.[0]?.items?.[0]?.body;
 
 
-   if (hero.sequences)
-     resource = hero.sequences[0]?.canvases?.[0]?.images?.[0]?.resource;
+  if (hero.sequences)
+    resource = hero.sequences[0]?.canvases?.[0]?.images?.[0]?.resource;
 
   return (
     <Wrapper>

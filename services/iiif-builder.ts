@@ -40,7 +40,7 @@ const buildItem = (type: string, id: string, label: string, homepage: string, th
   },
   homepage: [buildHomepage(homepage, label)],
   thumbnail: [buildThumbnail(thumbnail)],
-  summary: {none: [summary]},
+  summary: { none: [summary] },
 });
 
 export { buildCollection };

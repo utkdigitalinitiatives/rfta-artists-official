@@ -37,9 +37,8 @@ const NavItems = ({ items }: NavItemsProps) => {
       transitionDuration: isHoveredFromNull ? "0ms" : "100ms",
       opacity: highlightedItem ? 0.25 : 0,
       width: `${itemBoundingBox.width}px`,
-      transform: `translate(${
-        itemBoundingBox.left - wrapperBoundingBox.left
-      }px)`,
+      transform: `translate(${itemBoundingBox.left - wrapperBoundingBox.left
+        }px)`,
     };
   }
 

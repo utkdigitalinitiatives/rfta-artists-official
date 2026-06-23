@@ -36,11 +36,11 @@ const Figure = ({
         style={
           isCover
             ? {
-                objectFit: "cover",
-                objectPosition: "50% 50%",
-                width: "200px",
-                height: "200px",
-              }
+              objectFit: "cover",
+              objectPosition: "50% 50%",
+              width: "200px",
+              height: "200px",
+            }
             : {}
         }
         onLoad={() => setLoaded(true)}

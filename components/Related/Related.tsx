@@ -34,7 +34,7 @@ const Related = ({ label, artist }: RelatedProps) => {
           </h2>
           <div>
             <BloomIIIF
-              collectionId={ bloom_values[artist] }
+              collectionId={bloom_values[artist]}
             />
           </div>
         </RelatedWrapper>

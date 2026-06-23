@@ -33,9 +33,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
   Promise.resolve(
     getMetadata(metdataQuery)
-       .then((data: any) => {
-         const safeLabel = Array.isArray(label) ? label[0] : label;
-         return [safeLabel]
+      .then((data: any) => {
+        const safeLabel = Array.isArray(label) ? label[0] : label;
+        return [safeLabel]
           .map((string) => {
             const values = data[string];
             return {

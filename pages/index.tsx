@@ -5,7 +5,7 @@ import Layout from "@/components/layout";
 import { InView } from "react-intersection-observer";
 import { map as lodashMap, groupBy as lodashGroupBy } from "lodash";
 import Grid from "@/components/Grid/Grid";
-import {NextSeo} from "next-seo";
+import { NextSeo } from "next-seo";
 
 const RESULT_LIMIT = 20;
 
@@ -78,7 +78,7 @@ export default function Index({ manifests, metadata }: { manifests: any; metadat
         {/* <Filter /> */}
         <Grid>
           {results &&
-             results.map((result: any, i: number) => {
+            results.map((result: any, i: number) => {
               return <Grid.Item data={result} key={result.id} />;
             })}
         </Grid>

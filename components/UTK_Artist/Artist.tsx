@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import BloomIIIF from "@samvera/bloom-iiif";
 import { StyledArtistDescription, StyledArtist } from "@/components/UTK_Artist/Artist.styled"
 
