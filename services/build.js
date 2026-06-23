@@ -49,7 +49,10 @@ const normalizeJsonResponse = (response, url) => {
 const addJsonFormatParam = (url) => {
   try {
     const parsed = new URL(url);
-    if (!parsed.searchParams.has("format") && !parsed.searchParams.has("_format")) {
+    if (
+      !parsed.searchParams.has("format") &&
+      !parsed.searchParams.has("_format")
+    ) {
       parsed.searchParams.set("format", "json");
     }
     return parsed.toString();
@@ -83,7 +86,8 @@ const fetchJsonWithRetry = async (url, retries = 3, backoffMs = 750) => {
             const hintedResponse = await axios.get(hintedUrl, {
               timeout: 15000,
               headers: {
-                Accept: "application/ld+json, application/json;q=0.9, */*;q=0.1",
+                Accept:
+                  "application/ld+json, application/json;q=0.9, */*;q=0.1",
                 "User-Agent":
                   "rfta-canopy-build/1.0 (+https://github.com/utkdigitalinitiatives/rfta-artists-official)",
               },
