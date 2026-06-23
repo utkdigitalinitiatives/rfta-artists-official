@@ -1,13 +1,37 @@
 const axios = require("axios");
 const slugify = require("slugify");
 
-exports.getRootCollection = (id) =>
-  axios.get(id).then((response) => response.data);
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const fetchJsonWithRetry = async (url, retries = 3, backoffMs = 750) => {
+  let lastError;
+
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      lastError = error;
+      const status = error?.response?.status;
+      const isRetryable = !status || status >= 500 || status === 429;
+
+      if (!isRetryable || attempt === retries) {
+        break;
+      }
+
+      await delay(backoffMs * attempt);
+    }
+  }
+
+  throw lastError;
+};
+
+exports.getRootCollection = (id) => fetchJsonWithRetry(id);
 
 exports.getBulkManifests = async (items, chunkSize) =>
   await chunks(
     items,
-    async (item) => axios.get(item.id).then((result) => result.data),
+    async (item) => fetchJsonWithRetry(item.id),
     chunkSize
   );
 
