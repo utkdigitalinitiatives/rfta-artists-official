@@ -11,10 +11,10 @@ interface RelatedProps {
 const Related = ({ label, artist }: RelatedProps) => {
   const [baseUrl, setBaseUrl] = useState("");
   const bloom_values: Record<string, string> = {
-    "Braddock, Paige": "https://digital.lib.utk.edu/static/iiif/collections/paige_rftaart.json",
-    "Daniel, Charles R. (Charlie), Jr., 1929-": "https://digital.lib.utk.edu/static/iiif/collections/charlie_rftaart.json",
-    "Ramsey, Marshall": "https://digital.lib.utk.edu/static/iiif/collections/marshall_rftaart.json",
-    "Wilson, Danny": "https://digital.lib.utk.edu/static/iiif/collections/danny_rftaart.json"
+    "Braddock, Paige": "https://digital.lib.utk.edu/assemble/collection/collections/paige_rftaart",
+    "Daniel, Charles R. (Charlie), Jr., 1929-": "https://digital.lib.utk.edu/assemble/collection/collections/charlie_rftaart",
+    "Ramsey, Marshall": "https://digital.lib.utk.edu/assemble/collection/collections/marshall_rftaart",
+    "Wilson, Danny": "https://digital.lib.utk.edu/assemble/collection/collections/danny_rftaart"
   }
   useEffect(() => {
     const { host, protocol } = window.location;
