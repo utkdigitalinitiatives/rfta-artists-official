@@ -11,16 +11,18 @@ interface RelatedProps {
 const Related = ({ label, artist }: RelatedProps) => {
   const [baseUrl, setBaseUrl] = useState("");
   const bloom_values: Record<string, string> = {
-    "Braddock, Paige": "https://digital.lib.utk.edu/static/iiif/collections/paige_rftaart.json",
-    "Daniel, Charles R. (Charlie), Jr., 1929-": "https://digital.lib.utk.edu/static/iiif/collections/charlie_rftaart.json",
-    "Ramsey, Marshall": "https://digital.lib.utk.edu/static/iiif/collections/marshall_rftaart.json",
-    "Wilson, Danny": "https://digital.lib.utk.edu/static/iiif/collections/danny_rftaart.json"
+    "Braddock, Paige": "/api/iiif/collection/paige-rftaart",
+    "Daniel, Charles R. (Charlie), Jr., 1929-": "/api/iiif/collection/charlie-rftaart",
+    "Ramsey, Marshall": "/api/iiif/collection/marshall-rftaart",
+    "Wilson, Danny": "/api/iiif/collection/danny-rftaart"
   }
   useEffect(() => {
     const { host, protocol } = window.location;
     const root = `${protocol}//${host}`;
     setBaseUrl(root);
   }, []);
+
+  const collectionId = baseUrl ? `${baseUrl}${bloom_values[artist]}` : undefined;
 
   /**
    * @todo: create graphql query to find related (or just 10 random) and IIIF collection endpoint
@@ -33,9 +35,7 @@ const Related = ({ label, artist }: RelatedProps) => {
             More like "<Label label={label} as="span" />"
           </h2>
           <div>
-            <BloomIIIF
-              collectionId={bloom_values[artist]}
-            />
+            {collectionId && <BloomIIIF collectionId={collectionId} />}
           </div>
         </RelatedWrapper>
       </StyledRelated>
