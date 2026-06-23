@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import Header from "@/components/Header/Header";
 import UTKHeader from "@/components/UTK_Header/UTKHeader"
 import Footer from "@/components/Footer/Footer";
@@ -7,28 +7,32 @@ import { useRouter } from "next/router";
 import { NextSeo } from 'next-seo';
 import Head from 'next/head';
 
-export default function Layout({ children }) {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+export default function Layout({ children }: LayoutProps) {
   const router = useRouter();
-  const canonicalUrl = (`https://rfta-artists.lib.utk.edu` + (router.asPath === "/" ? "": router.asPath)).split("?")[0];
+  const canonicalUrl = (`https://rfta-artists.lib.utk.edu` + (router.asPath === "/" ? "" : router.asPath)).split("?")[0];
   return (
     <>
       <Head>
-          {/* Add your Google Tag Manager script here */}
-          <script
-            async
-            src="https://www.googletagmanager.com/gtag/js?id=G-DN6TP2L65T"
-          ></script>
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
+        {/* Add your Google Tag Manager script here */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-DN6TP2L65T"
+        ></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
 
                 gtag('config', 'G-DN6TP2L65T');
               `,
-            }}
-          ></script>
+          }}
+        ></script>
       </Head>
       <NextSeo
         canonical={canonicalUrl}
@@ -58,7 +62,7 @@ export default function Layout({ children }) {
           }
         }
       />
-      <UTKHeader/>
+      <UTKHeader />
       <Header />
       <main>{children}</main>
       <Footer />

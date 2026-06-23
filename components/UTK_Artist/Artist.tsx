@@ -1,8 +1,17 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import BloomIIIF from "@samvera/bloom-iiif";
 import { StyledArtistDescription, StyledArtist } from "@/components/UTK_Artist/Artist.styled"
 
-const Artist = ({ artist }) => {
+interface ArtistData {
+  name: string;
+  [key: string]: any;
+}
+
+interface ArtistProps {
+  artist: ArtistData;
+}
+
+const Artist = ({ artist }: ArtistProps) => {
   const [baseUrl, setBaseUrl] = useState("");
   useEffect(() => {
     const { host, protocol } = window.location;

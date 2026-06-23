@@ -2,6 +2,15 @@ import { Content, Wrapper } from "@/components/Card/Card.styled";
 import Link from "next/link";
 import Figure from "@/components/Figure/Figure";
 
+interface CardProps {
+  label: string[];
+  path: string;
+  resource: Record<string, unknown> | null;
+  context?: string;
+  size?: string;
+  isCover?: boolean;
+}
+
 const Card = ({
   label,
   path,
@@ -9,7 +18,7 @@ const Card = ({
   context = "",
   size = "300,",
   isCover = false,
-}) => {
+}: CardProps) => {
   return (
     <Wrapper>
       <Link href={path}>

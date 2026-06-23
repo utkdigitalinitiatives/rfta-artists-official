@@ -1,7 +1,7 @@
-const buildCollection = (data) => {
+const buildCollection = (data: any) => {
   const { id, label, summary, homepage, items } = data;
 
-  const collectionItems = items.map(({ id, label, homepage, thumbnail, summary }) =>
+  const collectionItems = items.map(({ id, label, homepage, thumbnail, summary }: any) =>
     buildItem("Manifest", id, label, homepage, thumbnail, summary)
   );
 
@@ -20,19 +20,19 @@ const buildCollection = (data) => {
   };
 };
 
-const buildHomepage = (id, label) => ({
+const buildHomepage = (id: string, label: string) => ({
   id,
   type: "Text",
   label: { none: [label] },
   format: "text/html",
 });
 
-const buildThumbnail = (id) => ({
+const buildThumbnail = (id: string) => ({
   id: id,
   type: "Image",
 });
 
-const buildItem = (type, id, label, homepage, thumbnail, summary) => ({
+const buildItem = (type: string, id: string, label: string, homepage: string, thumbnail: string, summary: string) => ({
   id,
   type,
   label: {
@@ -40,7 +40,7 @@ const buildItem = (type, id, label, homepage, thumbnail, summary) => ({
   },
   homepage: [buildHomepage(homepage, label)],
   thumbnail: [buildThumbnail(thumbnail)],
-  summary: {none: [summary]},
+  summary: { none: [summary] },
 });
 
 export { buildCollection };

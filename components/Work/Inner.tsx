@@ -6,7 +6,18 @@ import {
 } from "@samvera/nectar-iiif";
 import { StyledWorkInner, WorkData } from "@/components/Work/Inner.styled"
 
-const WorkInner = ({ manifest }) => {
+interface ManifestData {
+  label: any;
+  metadata: any;
+  requiredStatement: any;
+  summary: any;
+}
+
+interface WorkInnerProps {
+  manifest: ManifestData;
+}
+
+const WorkInner = ({ manifest }: WorkInnerProps) => {
   const { label, metadata, requiredStatement, summary } = manifest;
 
   return (

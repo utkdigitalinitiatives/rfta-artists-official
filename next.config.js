@@ -22,6 +22,13 @@ module.exports = (phase) => {
     ...config.environment,
   };
 
-  canopy.buildCanopy(env);
+  // Netlify already runs `npm run canopy:build` before `next build`.
+  // Rebuilding here can fail on transient upstream 500s and break deploys.
+  if (isDev) {
+    canopy.buildCanopy(env).catch((error) => {
+      console.error("Canopy build failed in dev mode:", error?.message || error);
+    });
+  }
+
   return { env };
 };

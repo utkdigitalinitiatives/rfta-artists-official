@@ -3,12 +3,19 @@ import { getJsonByURI } from "@/services/utils";
 import Figure from "@/components/Figure/Figure";
 import { Wrapper } from "@/components/Hero/Hero.styled";
 
+interface HeroManifest {
+  items?: Array<{ items?: Array<{ items?: Array<{ body?: any }> }> }>;
+  sequences?: Array<{ canvases?: Array<{ images?: Array<{ resource?: any }> }> }>;
+}
+
 const Hero = () => {
-  const [hero, setHero] = useState();
+  const [hero, setHero] = useState<HeroManifest | undefined>();
 
   useEffect(() => {
-    const random = Math.floor(Math.random() * process.env.hero.length);
-    getJsonByURI(process.env.hero[random]).then((json) => {
+    const heroUrls = process.env.hero as string[] | undefined;
+    if (!heroUrls || heroUrls.length === 0) return;
+    const random = Math.floor(Math.random() * heroUrls.length);
+    getJsonByURI(heroUrls[random]).then((json: HeroManifest) => {
       setHero(json);
     });
   }, []);
@@ -20,10 +27,11 @@ const Hero = () => {
   /**
    * @todo: handle this better
    */
-  if (hero.items) resource = hero.items[0].items[0].items[0].body;
+  if (hero.items) resource = hero.items?.[0]?.items?.[0]?.items?.[0]?.body;
+
 
   if (hero.sequences)
-    resource = hero.sequences[0].canvases[0].images[0].resource;
+    resource = hero.sequences[0]?.canvases?.[0]?.images?.[0]?.resource;
 
   return (
     <Wrapper>

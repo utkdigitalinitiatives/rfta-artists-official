@@ -3,9 +3,14 @@ import { useEffect, useState } from "react";
 import { Label } from "@samvera/nectar-iiif";
 import { StyledRelated, RelatedWrapper, OuterStyledRelated } from "@/components/Related/Related.styled"
 
-const Related = ({ label, artist }) => {
+interface RelatedProps {
+  label: any;
+  artist: string;
+}
+
+const Related = ({ label, artist }: RelatedProps) => {
   const [baseUrl, setBaseUrl] = useState("");
-  const bloom_values = {
+  const bloom_values: Record<string, string> = {
     "Braddock, Paige": "https://digital.lib.utk.edu/static/iiif/collections/paige_rftaart.json",
     "Daniel, Charles R. (Charlie), Jr., 1929-": "https://digital.lib.utk.edu/static/iiif/collections/charlie_rftaart.json",
     "Ramsey, Marshall": "https://digital.lib.utk.edu/static/iiif/collections/marshall_rftaart.json",
@@ -29,7 +34,7 @@ const Related = ({ label, artist }) => {
           </h2>
           <div>
             <BloomIIIF
-              collectionId={ bloom_values[artist] }
+              collectionId={bloom_values[artist]}
             />
           </div>
         </RelatedWrapper>

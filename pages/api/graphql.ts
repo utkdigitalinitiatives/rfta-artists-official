@@ -3,9 +3,19 @@ import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { SchemaLink } from "@apollo/client/link/schema";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import slugify from "slugify";
+import { NextApiRequest, NextApiResponse } from 'next';
 import CANOPY_COLLECTIONS from "@/.canopy/collections.json";
 import CANOPY_MANIFESTS from "@/.canopy/manifests.json";
 import CANOPY_METADATA from "@/.canopy/metadata.json";
+
+type CanopyManifest = {
+  id?: string;
+  slug?: string;
+  label?: string[];
+  metadata?: unknown[];
+};
+
+const manifests = CANOPY_MANIFESTS as CanopyManifest[];
 
 const typeDefs = gql`
   type Query {
@@ -52,30 +62,32 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    collections: async (_, __, context) => {
+    collections: async (_: any, __: any, context: any) => {
       return CANOPY_COLLECTIONS;
     },
-    collectionItems: async (_, __, context) => {
-      return CANOPY_COLLECTIONS.items;
+    collectionItems: async (_: any, __: any, context: any) => {
+      return (CANOPY_COLLECTIONS as any).items || [];
     },
-    manifests: async (_, { limit, offset, id }, context) => {
-      return CANOPY_MANIFESTS;
+    manifests: async (_: any, { limit, offset, id }: { limit?: number; offset?: number; id?: string[] }, context: any) => {
+      return manifests;
     },
 
-    metadata: async (_, { id, label }, context) => {
+    metadata: async (_: any, { id, label }: { id?: string; label?: string }, context: any) => {
       if (CANOPY_METADATA) return CANOPY_METADATA;
     },
 
-    getManifest: async (_, { slug }, context) => {
-      return CANOPY_MANIFESTS.filter(
-        (item) =>
+    getManifest: async (_: any, { slug }: { slug: string }, context: any) => {
+      return manifests.find((item) => {
+        const label = item.label?.[0] || "";
+        return (
           slug ===
-          slugify(item.label[0], {
+          slugify(label, {
             lower: true,
             strict: true,
             trim: true,
           })
-      )[0];
+        );
+      });
     },
   },
 };
@@ -91,7 +103,7 @@ const apolloServer = new ApolloServer({
 
 const startServer = apolloServer.start();
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Origin",
@@ -125,7 +137,7 @@ export const client = new ApolloClient({
   ssrForceFetchDelay: 100,
 });
 
-export const getGraphQL = (query) =>
+export const getGraphQL = (query: any) =>
   fetch("/api/graphql", {
     method: "POST",
     headers: {
