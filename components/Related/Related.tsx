@@ -1,7 +1,11 @@
 import BloomIIIF from "@samvera/bloom-iiif";
 import { useEffect, useState } from "react";
 import { Label } from "@samvera/nectar-iiif";
-import { StyledRelated, RelatedWrapper, OuterStyledRelated } from "@/components/Related/Related.styled"
+import {
+  StyledRelated,
+  RelatedWrapper,
+  OuterStyledRelated,
+} from "@/components/Related/Related.styled";
 
 interface RelatedProps {
   label: any;
@@ -11,11 +15,15 @@ interface RelatedProps {
 const Related = ({ label, artist }: RelatedProps) => {
   const [baseUrl, setBaseUrl] = useState("");
   const bloom_values: Record<string, string> = {
-    "Braddock, Paige": "https://digital.lib.utk.edu/assemble/collection/collections/paige_rftaart",
-    "Daniel, Charles R. (Charlie), Jr., 1929-": "https://digital.lib.utk.edu/assemble/collection/collections/charlie_rftaart",
-    "Ramsey, Marshall": "https://digital.lib.utk.edu/assemble/collection/collections/marshall_rftaart",
-    "Wilson, Danny": "https://digital.lib.utk.edu/assemble/collection/collections/danny_rftaart"
-  }
+    "Braddock, Paige":
+      "https://digital.lib.utk.edu/assemble/collection/collections/paige_rftaart",
+    "Daniel, Charles R. (Charlie), Jr., 1929-":
+      "https://digital.lib.utk.edu/assemble/collection/collections/charlie_rftaart",
+    "Ramsey, Marshall":
+      "https://digital.lib.utk.edu/assemble/collection/collections/marshall_rftaart",
+    "Wilson, Danny":
+      "https://digital.lib.utk.edu/assemble/collection/collections/danny_rftaart",
+  };
   useEffect(() => {
     const { host, protocol } = window.location;
     const root = `${protocol}//${host}`;
@@ -33,9 +41,7 @@ const Related = ({ label, artist }: RelatedProps) => {
             More like "<Label label={label} as="span" />"
           </h2>
           <div>
-            <BloomIIIF
-              collectionId={bloom_values[artist]}
-            />
+            <BloomIIIF collectionId={bloom_values[artist]} />
           </div>
         </RelatedWrapper>
       </StyledRelated>
