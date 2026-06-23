@@ -8,9 +8,83 @@ const fs = require("fs").promises;
 const fsSync = require("fs");
 const slugify = require("slugify");
 
-module.exports.buildCanopy = async (env) => {
-  const json = await getRootCollection(env.collection);
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+const getFirstPageUrl = (json) => {
+  if (!json || typeof json !== "object") return null;
+  const first = json.first;
+  if (!first) return null;
+  if (typeof first === "string") return first;
+  if (typeof first === "object") return first.id || first["@id"] || null;
+  return null;
+};
+
+const fetchRootCollectionWithRetry = async (sourceUrl, attempts = 4) => {
+  let lastError = null;
+
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try {
+      const json = await getRootCollection(sourceUrl);
+      let canopyCollection = buildCanopyCollection(json, 0, null);
+      let itemCount = Array.isArray(canopyCollection?.items)
+        ? canopyCollection.items.length
+        : 0;
+
+      // Some IIIF servers return a paged root collection shell.
+      if (itemCount === 0) {
+        const firstPageUrl = getFirstPageUrl(json);
+        if (firstPageUrl) {
+          const firstPageJson = await getRootCollection(firstPageUrl);
+          const firstPageCollection = buildCanopyCollection(
+            firstPageJson,
+            0,
+            null,
+          );
+          const firstPageCount = Array.isArray(firstPageCollection?.items)
+            ? firstPageCollection.items.length
+            : 0;
+
+          if (firstPageCount > 0) {
+            return {
+              canopyCollection: firstPageCollection,
+              source: `${sourceUrl} -> ${firstPageUrl}`,
+            };
+          }
+        }
+      }
+
+      if (itemCount > 0) {
+        return {
+          canopyCollection,
+          source: sourceUrl,
+        };
+      }
+
+      const keys =
+        json && typeof json === "object"
+          ? Object.keys(json).slice(0, 12).join(",")
+          : typeof json;
+      lastError = new Error(
+        `Attempt ${attempt}/${attempts}: root collection had no items (keys: ${keys}).`,
+      );
+    } catch (error) {
+      lastError = error;
+    }
+
+    if (attempt < attempts) {
+      console.warn(
+        `Retrying canopy root collection fetch (${attempt}/${attempts}) for ${sourceUrl}...`,
+      );
+      await delay(750 * attempt);
+    }
+  }
+
+  throw (
+    lastError || new Error(`Failed to fetch root collection from ${sourceUrl}`)
+  );
+};
+
+module.exports.buildCanopy = async (env) => {
   /**
    * set directory to write canopy structure to
    */
@@ -20,7 +94,10 @@ module.exports.buildCanopy = async (env) => {
    * generate collection data
    */
   console.log(`Generating collection data...`);
-  const canopyCollection = buildCanopyCollection(json, 0, null);
+  const { canopyCollection, source } = await fetchRootCollectionWithRetry(
+    env.collection,
+  );
+  console.log(`Canopy collection source: ${source}`);
 
   if (
     !canopyCollection ||
