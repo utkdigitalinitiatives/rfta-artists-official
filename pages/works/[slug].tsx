@@ -7,6 +7,12 @@ import Metatag from "@/components/Metatag/Metatag";
 import { Summary, Thumbnail } from "@samvera/nectar-iiif";
 import Related from "@/components/Related/Related";
 import WorkInner from "@/components/Work/Inner";
+import CANOPY_MANIFESTS from "@/.canopy/manifests.json";
+
+type CanopyManifest = {
+  id: string;
+  slug: string;
+};
 
 export default function Manifest({ manifest, slug }: { manifest: any; slug: string }) {
   const { id, label, metadata, summary, thumbnail } = manifest;
@@ -31,47 +37,41 @@ export default function Manifest({ manifest, slug }: { manifest: any; slug: stri
 export async function getStaticProps({ params }: { params: any }) {
   const { slug } = params;
 
-  const { loading, error, data } = await client.query({
-    query: gql`
-      query GetManifestBySlug {
-        getManifest(slug: "${slug}") { id, label }
-      }
-    `,
-  });
+  const index = (CANOPY_MANIFESTS as CanopyManifest[]).find(
+    (item) => item.slug === slug,
+  );
 
-  if (!data) return null;
+  if (!index) {
+    return {
+      notFound: true,
+      revalidate: 600,
+    };
+  }
 
-  const { id } = data.getManifest;
   const vault = new Vault();
   const manifest = await vault
-    .loadManifest(id)
+    .loadManifest(index.id)
     .then((data) => data)
     .catch((error) => {
-      console.error(`Manifest ${id} failed to load: ${error}`);
+      console.error(`Manifest ${index.id} failed to load: ${error}`);
     });
+
+  if (!manifest) {
+    return {
+      notFound: true,
+      revalidate: 600,
+    };
+  }
 
   return {
     props: { manifest, slug },
+    revalidate: 600,
   };
 }
 
 export async function getStaticPaths() {
-  const { loading, error, data } = await client.query({
-    query: gql`
-      query Manifests {
-        manifests {
-          slug
-        }
-      }
-    `,
-  });
-
-  const paths = data.manifests.map((item: any) => ({
-    params: { ...item },
-  }));
-
   return {
-    paths: paths,
-    fallback: false,
+    paths: [],
+    fallback: "blocking",
   };
 }

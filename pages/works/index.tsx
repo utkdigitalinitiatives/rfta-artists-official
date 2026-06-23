@@ -40,6 +40,7 @@ export default function Index({ manifests, metadata }: { manifests: any; metadat
             id
             label
             slug
+            thumbnail
             metadata
             collectionId
           }
@@ -95,6 +96,7 @@ export async function getStaticProps() {
           id
           label
           slug
+          thumbnail
           metadata
           collectionId
         }

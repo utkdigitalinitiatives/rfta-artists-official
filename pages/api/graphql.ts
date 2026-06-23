@@ -49,6 +49,7 @@ const typeDefs = gql`
     id: ID
     label: [String]
     metadata: [Metadata]
+    thumbnail: String
     slug: ID
   }
 

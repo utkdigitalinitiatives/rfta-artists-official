@@ -7,6 +7,7 @@ import { Item } from "@/components/Grid/Grid.styled";
 type GridItemData = {
   id: string;
   slug: string;
+  thumbnail?: string;
 };
 
 type IIIFResource = {
@@ -40,8 +41,10 @@ const GridItem = ({ data }: { data: GridItemData }) => {
   const [item, setItem] = useState<ManifestLike | null>(null);
 
   useEffect(() => {
+    if (data.thumbnail) return;
+
     let isMounted = true;
-    getJsonByURI(data.id).then((json: ManifestLike) => {
+    getJsonByURI(`/api/iiif/manifest/${data.slug}`).then((json: ManifestLike) => {
       if (isMounted) setItem(json);
     });
 
@@ -52,16 +55,22 @@ const GridItem = ({ data }: { data: GridItemData }) => {
 
   let resource: IIIFResource | null = null;
 
-  if (!item) return <></>;
+  if (!data.thumbnail && !item) return <></>;
+
+  if (data.thumbnail) {
+    resource = { id: data.thumbnail };
+  }
 
   // Prefer manifest thumbnail for card contexts so we do not load full OBJ payloads.
-  const thumbnail = Array.isArray(item.thumbnail)
-    ? item.thumbnail[0]
-    : item.thumbnail;
+  const thumbnail = item
+    ? (Array.isArray(item.thumbnail)
+      ? item.thumbnail[0]
+      : item.thumbnail)
+    : undefined;
 
-  if (thumbnail) {
+  if (!resource && thumbnail) {
     resource = thumbnail;
-  } else {
+  } else if (!resource && item) {
     /**
      * @todo: handle this better
      * 29 May 2024 -- Updated to check for undefined in the first array item
@@ -79,7 +88,7 @@ const GridItem = ({ data }: { data: GridItemData }) => {
     <Item className="can-grid-column">
       <Card
         key={data.id}
-        label={getLabel(item.label)}
+        label={getLabel(item?.label || "Untitled")}
         path={`/works/${data.slug}`}
         resource={resource}
       />

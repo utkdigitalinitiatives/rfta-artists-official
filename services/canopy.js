@@ -60,16 +60,6 @@ module.exports.buildCanopy = async (env) => {
       };
   });
 
-  try {
-    await fs.writeFile(
-      `${canopyDirectory}/manifests.json`,
-      JSON.stringify(canopyManifests)
-    );
-  } catch (err) {
-    console.error("Error writing manifests.json:", err);
-    throw err;
-  }
-
   /**
    * flatten metadata
    */
@@ -80,6 +70,55 @@ module.exports.buildCanopy = async (env) => {
     manifests = await getBulkManifests(canopyManifests, 25);
   } catch (err) {
     console.error("Error fetching manifests:", err);
+    throw err;
+  }
+
+  const getManifestThumbnail = (manifest) => {
+    if (!manifest) return null;
+
+    const v3Thumbnail = Array.isArray(manifest.thumbnail)
+      ? manifest.thumbnail[0]
+      : manifest.thumbnail;
+
+    if (v3Thumbnail?.id) return v3Thumbnail.id;
+    if (v3Thumbnail?.["@id"]) return v3Thumbnail["@id"];
+
+    const v3Body = manifest?.items?.[0]?.items?.[0]?.items?.[0]?.body;
+    if (v3Body?.id) return v3Body.id;
+    if (v3Body?.["@id"]) return v3Body["@id"];
+
+    const v2Resource = manifest?.sequences?.[0]?.canvases?.[0]?.images?.[0]?.resource;
+    if (v2Resource?.id) return v2Resource.id;
+    if (v2Resource?.["@id"]) return v2Resource["@id"];
+
+    return null;
+  };
+
+  const normalizeManifestId = (id) =>
+    typeof id === "string" ? id.replace(/^http:\/\//i, "https://") : id;
+
+  const manifestsById = new Map(
+    manifests
+      .filter(Boolean)
+      .map((manifest) => [normalizeManifestId(manifest.id), manifest])
+  );
+
+  const canopyManifestsWithThumbnails = canopyManifests.map((manifest) => {
+    const fullManifest = manifestsById.get(normalizeManifestId(manifest.id));
+
+    return {
+      ...manifest,
+      thumbnail: getManifestThumbnail(fullManifest),
+    };
+  });
+
+  try {
+    await fs.writeFile(
+      `${canopyDirectory}/manifests.json`,
+      JSON.stringify(canopyManifestsWithThumbnails)
+    );
+  } catch (err) {
+    console.error("Error writing manifests.json:", err);
     throw err;
   }
 
