@@ -37,12 +37,25 @@ const normalizeJsonResponse = (response, url) => {
       `Non-JSON response from ${url} (content-type: ${contentType}). Preview: ${preview}`,
     );
     err.retryable = true;
+    err.nonJsonResponse = true;
     throw err;
   }
 
   const err = new Error(`Unexpected response type from ${url}: ${typeof data}`);
   err.retryable = true;
   throw err;
+};
+
+const addJsonFormatParam = (url) => {
+  try {
+    const parsed = new URL(url);
+    if (!parsed.searchParams.has("format") && !parsed.searchParams.has("_format")) {
+      parsed.searchParams.set("format", "json");
+    }
+    return parsed.toString();
+  } catch (_error) {
+    return url;
+  }
 };
 
 const fetchJsonWithRetry = async (url, retries = 3, backoffMs = 750) => {
@@ -61,6 +74,27 @@ const fetchJsonWithRetry = async (url, retries = 3, backoffMs = 750) => {
       return normalizeJsonResponse(response, url);
     } catch (error) {
       lastError = error;
+
+      // Some upstream handlers return HTML/text unless a json format hint is present.
+      if (error?.nonJsonResponse === true) {
+        const hintedUrl = addJsonFormatParam(url);
+        if (hintedUrl !== url) {
+          try {
+            const hintedResponse = await axios.get(hintedUrl, {
+              timeout: 15000,
+              headers: {
+                Accept: "application/ld+json, application/json;q=0.9, */*;q=0.1",
+                "User-Agent":
+                  "rfta-canopy-build/1.0 (+https://github.com/utkdigitalinitiatives/rfta-artists-official)",
+              },
+            });
+            return normalizeJsonResponse(hintedResponse, hintedUrl);
+          } catch (hintError) {
+            lastError = hintError;
+          }
+        }
+      }
+
       const status = error?.response?.status;
       const isRetryable =
         error?.retryable === true || !status || status >= 500 || status === 429;

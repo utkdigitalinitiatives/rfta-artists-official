@@ -21,6 +21,9 @@ const env = {
     console.log(`Canopy metadata rows: ${metadata.length}`);
     console.log("Canopy build complete!");
   } catch (error) {
+    if (error?.message) {
+      console.error(`Canopy build error message: ${error.message}`);
+    }
     console.error("Error building Canopy:", error);
     process.exit(1);
   }
