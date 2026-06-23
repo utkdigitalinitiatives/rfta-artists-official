@@ -30,6 +30,10 @@ const Related = ({ label, artist }: RelatedProps) => {
     setBaseUrl(root);
   }, []);
 
+  const collectionId = baseUrl
+    ? `${baseUrl}${bloom_values[artist]}`
+    : undefined;
+
   /**
    * @todo: create graphql query to find related (or just 10 random) and IIIF collection endpoint
    */
