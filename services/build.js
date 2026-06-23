@@ -3,18 +3,28 @@ const slugify = require("slugify");
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const fetchJsonWithRetry = async (url, retries = 3, backoffMs = 750) => {
+const fetchJsonWithRetry = async (url, retries = 5, backoffMs = 2000) => {
   let lastError;
 
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       const response = await axios.get(url, {
         headers: {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-          "Accept": "application/json",
+          "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+          "Accept": "application/ld+json, application/json, */*;q=0.9",
           "Accept-Language": "en-US,en;q=0.9",
+          "Accept-Encoding": "gzip, deflate, br",
+          "Referer": "https://digital.lib.utk.edu/",
+          "DNT": "1",
+          "Connection": "keep-alive",
+          "Upgrade-Insecure-Requests": "1",
+          "Sec-Fetch-Dest": "document",
+          "Sec-Fetch-Mode": "navigate",
+          "Sec-Fetch-Site": "none",
+          "Cache-Control": "max-age=0",
         },
-        timeout: 10000,
+        timeout: 15000,
+        maxRedirects: 5,
       });
 
       // Detect if we got HTML instead of JSON (Anubis bot detection)
@@ -26,14 +36,15 @@ const fetchJsonWithRetry = async (url, retries = 3, backoffMs = 750) => {
     } catch (error) {
       lastError = error;
       const status = error?.response?.status;
-      const isRetryable = !status || status >= 500 || status === 429 || error.message?.includes("HTML");
+      const isRetryable = !status || status >= 500 || status === 429 || error.message?.includes("HTML") || error.code === "ECONNABORTED";
 
       if (!isRetryable || attempt === retries) {
         break;
       }
 
-      console.log(`Retry attempt ${attempt}/${retries} for ${url} after ${backoffMs * attempt}ms...`);
-      await delay(backoffMs * attempt);
+      const delayMs = backoffMs * Math.pow(2, attempt - 1);
+      console.log(`Retry attempt ${attempt}/${retries} for ${url.substring(0, 70)}... after ${delayMs}ms...`);
+      await delay(delayMs);
     }
   }
 
