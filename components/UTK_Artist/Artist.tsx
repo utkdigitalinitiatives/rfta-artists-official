@@ -19,15 +19,17 @@ const Artist = ({ artist }: ArtistProps) => {
     setBaseUrl(root);
   }, []);
 
+  const collectionId = baseUrl
+    ? `${baseUrl}${artist.collection}`
+    : undefined;
+
   return (
     <StyledArtist>
       <h3>{artist.name}</h3>
       <StyledArtistDescription>
         <strong>{artist.name}</strong> {artist.description}
       </StyledArtistDescription>
-      <BloomIIIF
-        collectionId={artist.collection}
-      />
+      {collectionId && <BloomIIIF collectionId={collectionId} />}
     </StyledArtist>
   );
 
