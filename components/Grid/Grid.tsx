@@ -3,9 +3,13 @@ import GridItem from "@/components/Grid/Item";
 import GridLoadMore from "@/components/Grid/LoadMore";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { media } from "@/stiches.config";
-import { useEffect, useState } from "react";
+import { useEffect, useState, ReactNode } from "react";
 
-const Grid = ({ children }) => {
+interface GridProps {
+  children: ReactNode;
+}
+
+const Grid = ({ children }: GridProps) => {
   /**
    * @todo move this elsewhere and make it smarter
    */

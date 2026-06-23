@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import Header from "@/components/Header/Header";
 import UTKHeader from "@/components/UTK_Header/UTKHeader"
 import Footer from "@/components/Footer/Footer";
@@ -7,7 +7,11 @@ import { useRouter } from "next/router";
 import { NextSeo } from 'next-seo';
 import Head from 'next/head';
 
-export default function Layout({ children }) {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+export default function Layout({ children }: LayoutProps) {
   const router = useRouter();
   const canonicalUrl = (`https://rfta-artists.lib.utk.edu` + (router.asPath === "/" ? "": router.asPath)).split("?")[0];
   return (

@@ -3,18 +3,27 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Highlight, Items } from "@/components/Nav/Nav.styled";
 
-const NavItems = ({ items }) => {
-  const [itemBoundingBox, setItemBoundingBox] = React.useState(null);
-  const [wrapperBoundingBox, setWrapperBoundingBox] = React.useState(null);
-  const [highlightedItem, setHighlightedItem] = React.useState(null);
+interface NavItem {
+  path: string;
+  text: string;
+}
+
+interface NavItemsProps {
+  items: NavItem[];
+}
+
+const NavItems = ({ items }: NavItemsProps) => {
+  const [itemBoundingBox, setItemBoundingBox] = React.useState<DOMRect | null>(null);
+  const [wrapperBoundingBox, setWrapperBoundingBox] = React.useState<DOMRect | null>(null);
+  const [highlightedItem, setHighlightedItem] = React.useState<NavItem | null>(null);
   const [isHoveredFromNull, setIsHoveredFromNull] = React.useState(true);
 
   const highlightRef = React.useRef(null);
-  const wrapperRef = React.useRef(null);
+  const wrapperRef = React.useRef<HTMLDivElement>(null);
 
-  const repositionHighlight = (e, item) => {
-    setItemBoundingBox(e.target.getBoundingClientRect());
-    setWrapperBoundingBox(wrapperRef.current.getBoundingClientRect());
+  const repositionHighlight = (e: React.MouseEvent<HTMLAnchorElement>, item: NavItem) => {
+    setItemBoundingBox((e.target as HTMLAnchorElement).getBoundingClientRect());
+    setWrapperBoundingBox(wrapperRef.current?.getBoundingClientRect() || null);
     setIsHoveredFromNull(!highlightedItem);
     setHighlightedItem(item);
   };

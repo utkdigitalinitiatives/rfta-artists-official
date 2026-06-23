@@ -1,7 +1,8 @@
 import React from "react";
+import { ChangeEvent } from "react";
 
 const Filter = () => {
-  const handleSearch = async (event) => {
+  const handleSearch = async (event: ChangeEvent<HTMLInputElement>) => {
     // do something with event.target.value
   };
 

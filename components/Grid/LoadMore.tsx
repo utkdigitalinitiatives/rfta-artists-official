@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-const GridLoadMore = ({ handleLoadMore }) => {
+interface GridLoadMoreProps {
+  handleLoadMore: () => void;
+}
+
+const GridLoadMore = ({ handleLoadMore }: GridLoadMoreProps) => {
   return (
     <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
       <button

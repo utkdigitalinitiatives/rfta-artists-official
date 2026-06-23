@@ -11,18 +11,21 @@ export const getLabel = (
   if (!label) return ["Untitled"];
 
   if (typeof label === "string") return [label];
+  if (Array.isArray(label)) return label;
+
+  const labelMap = label as Record<string, string[]>;
 
   /*
    * If InternationalString code does not exist on label, then
    * return what may be there, ex: label.none[0] OR label.fr[0]
    */
-  if (!label[language]) {
-    const codes: Array<string> = Object.getOwnPropertyNames(label);
-    if (codes.length > 0) return label[codes[0]];
+  if (!labelMap[language]) {
+    const codes: Array<string> = Object.getOwnPropertyNames(labelMap);
+    if (codes.length > 0) return labelMap[codes[0]];
   }
 
   /*
    * Return label value for InternationalString code `en`
    */
-  return label[language];
+  return labelMap[language];
 };

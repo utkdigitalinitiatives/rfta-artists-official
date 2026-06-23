@@ -9,7 +9,7 @@ import {NextSeo} from "next-seo";
 
 const RESULT_LIMIT = 20;
 
-export default function Index({ manifests, metadata }) {
+export default function Index({ manifests, metadata }: { manifests: any; metadata: any }) {
   /**
    * @todo make section a component with an isFluid variant and default at max-width 1280
    */
@@ -23,7 +23,7 @@ export default function Index({ manifests, metadata }) {
     const data = fetchData(newOffset);
 
     if (data && results.length > 0)
-      data.then((response) => {
+      data.then((response: any) => {
         setResults(results.concat(response.manifests));
         setOffset(newOffset);
       });
@@ -33,7 +33,7 @@ export default function Index({ manifests, metadata }) {
    * @param offset
    * @returns
    */
-  const fetchData = async (offset) => {
+  const fetchData = async (offset: number) => {
     const { loading, error, data } = await client.query({
       query: gql`
         query Manifests {
@@ -78,7 +78,7 @@ export default function Index({ manifests, metadata }) {
         {/* <Filter /> */}
         <Grid>
           {results &&
-            results.map((result, i) => {
+             results.map((result: any, i: number) => {
               return <Grid.Item data={result} key={result.id} />;
             })}
         </Grid>

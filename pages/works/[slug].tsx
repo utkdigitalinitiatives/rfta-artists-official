@@ -8,9 +8,9 @@ import { Summary, Thumbnail } from "@samvera/nectar-iiif";
 import Related from "@/components/Related/Related";
 import WorkInner from "@/components/Work/Inner";
 
-export default function Manifest({ manifest, slug }) {
+export default function Manifest({ manifest, slug }: { manifest: any; slug: string }) {
   const { id, label, metadata, summary, thumbnail } = manifest;
-  const artist = metadata.filter(function (x) {
+  const artist = metadata.filter(function (x: any) {
     if (x.label.en[0] == "Artist") {
       return x.value.en[0];
     }
@@ -28,7 +28,7 @@ export default function Manifest({ manifest, slug }) {
   );
 }
 
-export async function getStaticProps({ params }) {
+export async function getStaticProps({ params }: { params: any }) {
   const { slug } = params;
 
   const { loading, error, data } = await client.query({
@@ -66,7 +66,7 @@ export async function getStaticPaths() {
     `,
   });
 
-  const paths = data.manifests.map((item) => ({
+  const paths = data.manifests.map((item: any) => ({
     params: { ...item },
   }));
 

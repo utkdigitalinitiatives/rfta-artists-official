@@ -6,8 +6,9 @@ import map from "lodash/map";
 import orderBy from "lodash/orderBy";
 import absoluteUrl from "next-absolute-url";
 import slugify from "slugify";
+import { NextApiRequest, NextApiResponse } from 'next';
 
-const getMetadata = async (metdataQuery) => {
+const getMetadata = async (metdataQuery: string) => {
   const { loading, error, data } = await client.query({
     query: gql`
           query Metadata {
@@ -18,7 +19,7 @@ const getMetadata = async (metdataQuery) => {
   return data;
 };
 
-export default function handler(req, res) {
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { origin } = absoluteUrl(req);
   const { label } = req.query;
 
@@ -32,8 +33,9 @@ export default function handler(req, res) {
 
   Promise.resolve(
     getMetadata(metdataQuery)
-      .then((data) => {
-        return [label]
+       .then((data: any) => {
+         const safeLabel = Array.isArray(label) ? label[0] : label;
+         return [safeLabel]
           .map((string) => {
             const values = data[string];
             return {
