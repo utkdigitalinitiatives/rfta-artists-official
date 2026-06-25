@@ -63,3 +63,5 @@ const dev = {
 exports.config = config;
 exports.dev = dev;
 ```
+
+Canopy build trigger counter: 1
