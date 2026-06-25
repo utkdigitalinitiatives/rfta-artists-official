@@ -10,7 +10,10 @@ const slugify = require("slugify");
 
 const normalizeIiifUrl = (value) => {
   if (!value || typeof value !== "string") return value;
-  return value.replace(/http:\/\/digital\.lib\.utk\.edu/gi, "https://digital.lib.utk.edu");
+  return value.replace(
+    /http:\/\/digital\.lib\.utk\.edu/gi,
+    "https://digital.lib.utk.edu",
+  );
 };
 
 module.exports.buildCanopy = async (env) => {
