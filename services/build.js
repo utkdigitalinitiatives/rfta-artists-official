@@ -1,6 +1,11 @@
 const axios = require("axios");
 const slugify = require("slugify");
 
+const normalizeIiifUrl = (value) => {
+  if (!value || typeof value !== "string") return value;
+  return value.replace(/http:\/\/digital\.lib\.utk\.edu/gi, "https://digital.lib.utk.edu");
+};
+
 exports.getRootCollection = (id) =>
   fetch(id).then((response) => response.json());
 
@@ -37,7 +42,7 @@ exports.buildCanopyCollection = (json, depth, parent = null) => {
    */
   switch (context) {
     case "iiif.io/api/presentation/2/context.json":
-      id = json["@id"];
+      id = normalizeIiifUrl(json["@id"]);
       label = getLabel(json.label);
       slug = slugify(label[0], process.env.slugify);
       children = buildCollectionItems2(json, id);
@@ -52,7 +57,7 @@ exports.buildCanopyCollection = (json, depth, parent = null) => {
         items: children.items,
       };
     case "iiif.io/api/presentation/3/context.json":
-      id = json.id;
+      id = normalizeIiifUrl(json.id);
       label = getLabel(json.label);
       slug = slugify(label[0], process.env.slugify);
       children = buildCollectionItems3(json, id);
@@ -88,7 +93,7 @@ const buildCollectionItems2 = (json, parent) => {
   if (json.collections)
     items = items.concat(
       json.collections.map((item) => {
-        item.id = item["@id"];
+        item.id = normalizeIiifUrl(item["@id"]);
         delete item["@id"];
 
         item.type = item["@type"].replace("sc:", "");
@@ -105,7 +110,7 @@ const buildCollectionItems2 = (json, parent) => {
   if (json.manifests)
     items = items.concat(
       json.manifests.map((item) => {
-        item.id = item["@id"];
+        item.id = normalizeIiifUrl(item["@id"]);
         delete item["@id"];
 
         item.type = item["@type"].replace("sc:", "");

@@ -6,10 +6,10 @@ import { StyledRelated, RelatedWrapper, OuterStyledRelated } from "@/components/
 const Related = ({ label, artist }) => {
   const [baseUrl, setBaseUrl] = useState("");
   const bloom_values = {
-    "Braddock, Paige": "https://digital.lib.utk.edu/static/iiif/collections/paige_rftaart.json",
-    "Daniel, Charles R. (Charlie), Jr., 1929-": "https://digital.lib.utk.edu/static/iiif/collections/charlie_rftaart.json",
-    "Ramsey, Marshall": "https://digital.lib.utk.edu/static/iiif/collections/marshall_rftaart.json",
-    "Wilson, Danny": "https://digital.lib.utk.edu/static/iiif/collections/danny_rftaart.json"
+    "Braddock, Paige": "/api/iiif/collection/paige-rftaart",
+    "Daniel, Charles R. (Charlie), Jr., 1929-": "/api/iiif/collection/charlie-rftaart",
+    "Ramsey, Marshall": "/api/iiif/collection/marshall-rftaart",
+    "Wilson, Danny": "/api/iiif/collection/danny-rftaart"
   }
   useEffect(() => {
     const { host, protocol } = window.location;
@@ -28,9 +28,9 @@ const Related = ({ label, artist }) => {
             More like "<Label label={label} as="span" />"
           </h2>
           <div>
-            <BloomIIIF
-              collectionId={ bloom_values[artist] }
-            />
+            {baseUrl && bloom_values[artist] && (
+              <BloomIIIF collectionId={`${baseUrl}${bloom_values[artist]}`} />
+            )}
           </div>
         </RelatedWrapper>
       </StyledRelated>

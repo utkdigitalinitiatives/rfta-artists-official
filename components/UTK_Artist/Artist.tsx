@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import BloomIIIF from "@samvera/bloom-iiif";
 import { StyledArtistDescription, StyledArtist } from "@/components/UTK_Artist/Artist.styled"
 
@@ -16,9 +16,9 @@ const Artist = ({ artist }) => {
       <StyledArtistDescription>
         <strong>{artist.name}</strong> {artist.description}
       </StyledArtistDescription>
-      <BloomIIIF
-        collectionId={artist.collection}
-      />
+      {baseUrl && artist.collection && (
+        <BloomIIIF collectionId={`${baseUrl}${artist.collection}`} />
+      )}
     </StyledArtist>
   );
 

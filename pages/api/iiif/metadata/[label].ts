@@ -6,6 +6,7 @@ import map from "lodash/map";
 import orderBy from "lodash/orderBy";
 import absoluteUrl from "next-absolute-url";
 import slugify from "slugify";
+import { normalizeIiifUrl } from "@/services/iiif-url";
 
 const getMetadata = async (metdataQuery) => {
   const { loading, error, data } = await client.query({
@@ -56,23 +57,23 @@ export default function handler(req, res) {
                 return {
                   label: term.value,
                   summary: `View objects with a label of "${grouped.label}" and value of "${term.value}".`,
-                  id: `${origin}/api/iiif/metadata/${slugify(
+                  id: normalizeIiifUrl(`${origin}/api/iiif/metadata/${slugify(
                     grouped.label
-                  )}/${slugify(term.value)}`,
-                  thumbnail: thumbnail,
-                  homepage: `${origin}/browse/${slugify(
+                  )}/${slugify(term.value)}`),
+                  thumbnail: normalizeIiifUrl(thumbnail),
+                  homepage: normalizeIiifUrl(`${origin}/browse/${slugify(
                     grouped.label
-                  )}/${slugify(term.value)}`,
+                  )}/${slugify(term.value)}`),
                 };
               }),
               "count",
               "desc"
             ).slice(0, 10);
             return {
-              id: `${origin}/api/iiif/metadata/${grouped.label}`,
+              id: normalizeIiifUrl(`${origin}/api/iiif/metadata/${grouped.label}`),
               label: grouped.label,
               summary: `Browse by ${grouped.label}`,
-              homepage: `${origin}/browse/${slugify(grouped.label)}`,
+              homepage: normalizeIiifUrl(`${origin}/browse/${slugify(grouped.label)}`),
               items,
             };
           })[0];

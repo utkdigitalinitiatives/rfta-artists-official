@@ -8,8 +8,7 @@ const GridItem = ({ data }) => {
   const [item, setItem] = useState();
 
   useEffect(() => {
-    let isMounted = true;
-    getJsonByURI(data.id).then((json) => {
+    getJsonByURI(`/api/iiif/manifest/${data.slug}`).then((json) => {
       setItem(json);
     });
   }, []);
@@ -18,14 +17,18 @@ const GridItem = ({ data }) => {
 
   if (!item) return <></>;
 
+  if (item.thumbnail?.[0]) {
+    resource = item.thumbnail[0];
+  }
+
   /**
    * @todo: handle this better
    * 29 May 2024 -- Updated to check for undefined in the first array item
    */
-  if (item.items[0] !== undefined) { 
+  if (!resource && item.items[0] !== undefined) {
     resource = item.items[0].items[0].items[0].body
   };
-  if (item.sequences) {
+  if (!resource && item.sequences) {
     resource = item.sequences[0].canvases[0].images[0].resource;
   }
 
