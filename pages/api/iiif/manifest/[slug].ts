@@ -4,7 +4,7 @@ import { normalizeIiifPayload, normalizeIiifUrl } from "@/services/iiif-url";
 const ISLANDORA_DATASTREAM_RE =
   /\/collections\/islandora\/object\/([^/]+)\/datastream\/(OBJ|JPG|TN)\b/i;
 
-const mapDatastreamToImageApi = () => "TN";
+const mapDatastreamToImageApi = () => "JPG";
 
 const toImageServiceId = (resourceId: string) => {
   const match = resourceId.match(ISLANDORA_DATASTREAM_RE);
@@ -31,22 +31,19 @@ const normalizeViewerResource = (node: any): any => {
   >;
 
   if (normalized.type === "Image" && typeof normalized.id === "string") {
-    const serviceId = toImageServiceId(normalized.id);
-    if (serviceId) {
+    const imageId = normalized.id.replace(
+      /\/datastream\/(OBJ|JPG|TN)\b/i,
+      "/datastream/JPG",
+    );
+
+    if (toImageServiceId(normalized.id)) {
+      // Force Clover simple-image mode for browser compatibility.
+      // Tiled mode is currently causing blank canvases in Firefox/Chrome.
       return {
         ...normalized,
-        id: normalized.id.replace(
-          /\/datastream\/(OBJ|JPG|TN)\b/i,
-          "/datastream/TN",
-        ),
+        id: imageId,
         format: "image/jpeg",
-        service: [
-          {
-            id: serviceId,
-            type: "ImageService2",
-            profile: "http://iiif.io/api/image/2/level2.json",
-          },
-        ],
+        service: undefined,
       };
     }
   }
