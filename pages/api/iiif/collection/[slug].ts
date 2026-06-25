@@ -1,6 +1,6 @@
 import { buildCollection } from "@/services/iiif-builder";
-import CANOPY_MANIFESTS from "@/.canopy/manifests.json";
-import CANOPY_METADATA from "@/.canopy/metadata.json";
+import CANOPY_MANIFESTS from "../../../../.canopy/manifests.json";
+import CANOPY_METADATA from "../../../../.canopy/metadata.json";
 import absoluteUrl from "next-absolute-url";
 import { normalizeIiifUrl } from "@/services/iiif-url";
 

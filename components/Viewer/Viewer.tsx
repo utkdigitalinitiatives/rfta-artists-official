@@ -1,11 +1,8 @@
 import dynamic from "next/dynamic";
 
-const CloverIIIF: React.ComponentType<{ manifestId: string }> = dynamic(
-  () => import("@samvera/clover-iiif"),
-  {
-    ssr: false,
-  }
-);
+const CloverIIIF = dynamic(() => import("@samvera/clover-iiif"), {
+  ssr: false,
+}) as any;
 
 const options = {
   showTitle: true,
@@ -13,7 +10,7 @@ const options = {
   scrollToZoom: false,
 };
 
-const Viewer = ({ manifestId }) => (
+const Viewer = ({ manifestId }: { manifestId: string }) => (
   <CloverIIIF manifestId={manifestId} options={options} />
 );
 export default Viewer;

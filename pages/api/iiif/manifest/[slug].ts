@@ -1,4 +1,4 @@
-import CANOPY_MANIFESTS from "@/.canopy/manifests.json";
+import CANOPY_MANIFESTS from "../../../../.canopy/manifests.json";
 import { normalizeIiifPayload, normalizeIiifUrl } from "@/services/iiif-url";
 
 const ISLANDORA_DATASTREAM_RE =

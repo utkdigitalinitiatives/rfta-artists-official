@@ -5,7 +5,7 @@ import Card from "@/components/Card/Card";
 import { Item } from "@/components/Grid/Grid.styled";
 
 const GridItem = ({ data }) => {
-  const [item, setItem] = useState();
+  const [item, setItem] = useState<any>(null);
 
   useEffect(() => {
     getJsonByURI(`/api/iiif/manifest/${data.slug}`).then((json) => {
@@ -26,8 +26,8 @@ const GridItem = ({ data }) => {
    * 29 May 2024 -- Updated to check for undefined in the first array item
    */
   if (!resource && item.items[0] !== undefined) {
-    resource = item.items[0].items[0].items[0].body
-  };
+    resource = item.items[0].items[0].items[0].body;
+  }
   if (!resource && item.sequences) {
     resource = item.sequences[0].canvases[0].images[0].resource;
   }
