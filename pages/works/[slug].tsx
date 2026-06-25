@@ -7,6 +7,7 @@ import Metatag from "@/components/Metatag/Metatag";
 import { Summary, Thumbnail } from "@samvera/nectar-iiif";
 import Related from "@/components/Related/Related";
 import WorkInner from "@/components/Work/Inner";
+import { normalizeIiifPayload } from "@/services/iiif-url";
 
 export default function Manifest({ manifest, manifestId }) {
   const { label, metadata, summary, thumbnail } = manifest;
@@ -43,12 +44,16 @@ export async function getStaticProps({ params }) {
 
   const { id } = data.getManifest;
   const vault = new Vault();
-  const manifest = await vault
+  const manifestRaw = await vault
     .loadManifest(id)
     .then((data) => data)
     .catch((error) => {
       console.error(`Manifest ${id} failed to load: ${error}`);
     });
+
+  const manifest = manifestRaw
+    ? normalizeIiifPayload(manifestRaw)
+    : manifestRaw;
 
   return {
     props: {
