@@ -7,6 +7,11 @@ const {
 const fs = require("fs");
 const slugify = require("slugify");
 
+const normalizeIiifUrl = (value) => {
+  if (!value || typeof value !== "string") return value;
+  return value.replace(/http:\/\/digital\.lib\.utk\.edu/gi, "https://digital.lib.utk.edu");
+};
+
 module.exports.buildCanopy = (env) => {
   getRootCollection(env.collection).then((json) => {
     /**
@@ -50,8 +55,8 @@ module.exports.buildCanopy = (env) => {
        */
       if (item.type === "Manifest")
         return {
-          collectionId: item.parent,
-          id: item.id,
+          collectionId: normalizeIiifUrl(item.parent),
+          id: normalizeIiifUrl(item.id),
           label: item.label,
           slug: slugify(item.label[0], env.slugify),
         };
@@ -97,10 +102,10 @@ module.exports.buildCanopy = (env) => {
             if (env.metadata.includes(metadataLabel)) {
               metadataValues.forEach((value) => {
                 const result = {
-                  manifestId: manifest.id,
+                  manifestId: normalizeIiifUrl(manifest.id),
                   label: metadataLabel,
                   value,
-                  thumbnail: manifest.thumbnail[0].id,
+                  thumbnail: normalizeIiifUrl(manifest.thumbnail[0].id),
                 };
                 canopyMetadata.push(result);
               });

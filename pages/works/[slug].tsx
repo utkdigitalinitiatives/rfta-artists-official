@@ -8,17 +8,17 @@ import { Summary, Thumbnail } from "@samvera/nectar-iiif";
 import Related from "@/components/Related/Related";
 import WorkInner from "@/components/Work/Inner";
 
-export default function Manifest({ manifest }) {
-  const { id, label, metadata, summary, thumbnail } = manifest;
+export default function Manifest({ manifest, manifestId }) {
+  const { label, metadata, summary, thumbnail } = manifest;
   const artist = metadata.filter(function (x) {
-    if(x.label.en[0] == "Artist" ){return x.value.en[0]}
-  } )[0].value.en[0];
+    if (x.label.en[0] == "Artist") { return x.value.en[0] }
+  })[0].value.en[0];
 
   return (
     <Layout>
-      <Metatag label={label} summary={summary} thumbnail={thumbnail}/>
+      <Metatag label={label} summary={summary} thumbnail={thumbnail} />
       <div style={{ padding: "1.31rem 0 0" }}>
-        <Viewer manifestId={id} />
+        <Viewer manifestId={manifestId} />
       </div>
       <WorkInner manifest={manifest} />
       <Related label={label} artist={artist} />
@@ -49,7 +49,10 @@ export async function getStaticProps({ params }) {
     });
 
   return {
-    props: { manifest },
+    props: {
+      manifest,
+      manifestId: `/api/iiif/manifest/${slug}`,
+    },
   };
 }
 
