@@ -38,7 +38,6 @@ const normalizeViewerResource = (node: any): any => {
     if (serviceId) {
       return {
         ...normalized,
-        id: `${serviceId}/full/max/0/default.jpg`,
         format: "image/jpeg",
         service: [
           {
