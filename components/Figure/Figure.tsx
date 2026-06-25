@@ -10,7 +10,7 @@ const Figure = ({
   isCover = false,
 }) => {
   const [loaded, setLoaded] = useState(false);
-  const imgRef = useRef();
+  const imgRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
     if (imgRef.current && imgRef.current.complete) {

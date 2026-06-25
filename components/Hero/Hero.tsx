@@ -4,7 +4,7 @@ import Figure from "@/components/Figure/Figure";
 import { Wrapper } from "@/components/Hero/Hero.styled";
 
 const Hero = () => {
-  const [hero, setHero] = useState();
+  const [hero, setHero] = useState<any>(null);
 
   useEffect(() => {
     const random = Math.floor(Math.random() * process.env.hero.length);
