@@ -3,10 +3,12 @@ import { getCanopyManifests } from "@/services/canopy-data";
 
 const ISLANDORA_DATASTREAM_RE =
   /\/collections\/islandora\/object\/([^/]+)\/datastream\/(OBJ|JPG|TN)\b/i;
+const DIGITAL_LIB_HTTP_RE = /http:\/\/digital\.lib\.utk\.edu/gi;
 
 const mapDatastreamToImageApi = (datastream: string) => {
   const source = datastream.toUpperCase();
-  return source === "OBJ" ? "JPG" : source;
+  if (source === "OBJ") return null;
+  return source;
 };
 
 const toImageServiceId = (resourceId: string) => {
@@ -15,11 +17,16 @@ const toImageServiceId = (resourceId: string) => {
 
   const [, objectId, datastream] = match;
   const imageDatastream = mapDatastreamToImageApi(datastream);
+  if (!imageDatastream) return null;
 
   return `https://digital.lib.utk.edu/iiif/2/collections~islandora~object~${objectId}~datastream~${imageDatastream}`;
 };
 
 const normalizeViewerResource = (node: any): any => {
+  if (typeof node === "string") {
+    return node.replace(DIGITAL_LIB_HTTP_RE, "https://digital.lib.utk.edu");
+  }
+
   if (Array.isArray(node))
     return node.map((item) => normalizeViewerResource(item));
   if (!node || typeof node !== "object") return node;
@@ -34,16 +41,12 @@ const normalizeViewerResource = (node: any): any => {
   >;
 
   if (normalized.type === "Image" && typeof normalized.id === "string") {
-    const imageId = normalized.id.replace(
-      /\/datastream\/(OBJ|JPG|TN)\b/i,
-      "/datastream/JPG",
-    );
     const serviceId = toImageServiceId(normalized.id);
 
     if (serviceId) {
       return {
         ...normalized,
-        id: imageId,
+        id: normalized.id,
         format: "image/jpeg",
         service: [
           {
@@ -87,7 +90,7 @@ export default async function handler(req, res) {
       const protocol = (req.headers["x-forwarded-proto"] as string) || "https";
       const host = req.headers.host;
       const localManifestId = `${protocol}://${host}/api/iiif/manifest/${slugValue}?viewer=1`;
-      const viewerManifest = normalizeViewerResource(normalizedManifest);
+      const viewerManifest = normalizeViewerResource(manifest);
       viewerManifest.id = localManifestId;
 
       return res.status(200).json(viewerManifest);
