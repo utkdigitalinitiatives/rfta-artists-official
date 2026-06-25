@@ -4,14 +4,17 @@ import { normalizeIiifPayload, normalizeIiifUrl } from "@/services/iiif-url";
 const ISLANDORA_DATASTREAM_RE =
   /\/collections\/islandora\/object\/([^/]+)\/datastream\/(OBJ|JPG|TN)\b/i;
 
-const mapDatastreamToImageApi = () => "OBJ";
+const mapDatastreamToImageApi = (datastream: string) => {
+  const source = datastream.toUpperCase();
+  return source === "OBJ" ? "JPG" : source;
+};
 
 const toImageServiceId = (resourceId: string) => {
   const match = resourceId.match(ISLANDORA_DATASTREAM_RE);
   if (!match) return null;
 
-  const [, objectId] = match;
-  const imageDatastream = mapDatastreamToImageApi();
+  const [, objectId, datastream] = match;
+  const imageDatastream = mapDatastreamToImageApi(datastream);
 
   return `https://digital.lib.utk.edu/iiif/2/collections~islandora~object~${objectId}~datastream~${imageDatastream}`;
 };
@@ -60,7 +63,7 @@ const normalizeViewerResource = (node: any): any => {
 export default async function handler(req, res) {
   const { slug, viewer } = req.query;
   const slugValue = Array.isArray(slug) ? slug[0] : slug;
-  const manifestRef = CANOPY_MANIFESTS.find((item) => item.slug === slug);
+  const manifestRef = CANOPY_MANIFESTS.find((item) => item.slug === slugValue);
 
   if (!manifestRef) {
     return res

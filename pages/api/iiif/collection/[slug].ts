@@ -38,12 +38,13 @@ const getArtistItems = (artistValue: string) => {
 export default function handler(req, res) {
   const { origin } = absoluteUrl(req);
   const { slug } = req.query;
-  const artistValue = ARTIST_MAP[slug as string];
+  const slugValue = Array.isArray(slug) ? slug[0] : slug;
+  const artistValue = ARTIST_MAP[slugValue as string];
 
   if (!artistValue) {
     return res
       .status(404)
-      .json({ message: `Unknown collection slug: ${slug}` });
+      .json({ message: `Unknown collection slug: ${slugValue}` });
   }
 
   const items = getArtistItems(artistValue).map((item) => ({
@@ -53,7 +54,7 @@ export default function handler(req, res) {
   }));
 
   const data = {
-    id: `${origin}/api/iiif/collection/${slug}`,
+    id: `${origin}/api/iiif/collection/${slugValue}`,
     label: artistValue,
     summary: `Works by ${artistValue}`,
     homepage: `${origin}/artists`,
