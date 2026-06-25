@@ -1,7 +1,8 @@
 import CANOPY_MANIFESTS from "@/.canopy/manifests.json";
 import { normalizeIiifPayload, normalizeIiifUrl } from "@/services/iiif-url";
+import absoluteUrl from "next-absolute-url";
 
-const normalizeManifestImages = (manifest: any) => {
+const normalizeManifestImages = (manifest: any, origin: string) => {
     if (!manifest?.items) return manifest;
 
     manifest.items.forEach((canvas: any) => {
@@ -10,10 +11,15 @@ const normalizeManifestImages = (manifest: any) => {
                 const body = annotation?.body;
                 if (!body || body.service || typeof body.id !== "string") return;
 
-                // Some source manifests provide only OBJ datastreams (often non-renderable/download-only).
-                // Fallback to TN so Clover can always render an image.
+                // Route through a local proxy that attempts OBJ first and falls back to TN.
                 if (body.id.includes("/datastream/OBJ")) {
-                    body.id = body.id.replace("/datastream/OBJ", "/datastream/TN");
+                    const primary = normalizeIiifUrl(body.id);
+                    const fallback = normalizeIiifUrl(
+                        body.id.replace("/datastream/OBJ", "/datastream/TN")
+                    );
+                    body.id = `${origin}/api/iiif/image?primary=${encodeURIComponent(
+                        primary
+                    )}&fallback=${encodeURIComponent(fallback)}`;
                     body.format = "image/jpeg";
                 }
             });
@@ -24,6 +30,7 @@ const normalizeManifestImages = (manifest: any) => {
 };
 
 export default async function handler(req, res) {
+    const { origin } = absoluteUrl(req);
     const { slug } = req.query;
     const manifestRef = CANOPY_MANIFESTS.find((item) => item.slug === slug);
 
@@ -38,7 +45,10 @@ export default async function handler(req, res) {
         }
 
         const manifest = await response.json();
-        const normalized = normalizeManifestImages(normalizeIiifPayload(manifest));
+        const normalized = normalizeManifestImages(
+            normalizeIiifPayload(manifest),
+            origin
+        );
         return res.status(200).json(normalized);
     } catch (error) {
         return res.status(500).json({ message: `Manifest fetch failed: ${error.message}` });
