@@ -23,7 +23,7 @@
     "graphql": "^15.8.0",
     "iiif-builder": "^1.0.4",
     "lodash": "^4.17.21",
-    "micro": "^10.0.1",
+    "micro": "^9.3.4",
     "next": "12.2.5",
     "next-absolute-url": "^1.2.2",
     "next-seo": "^5.4.0",
