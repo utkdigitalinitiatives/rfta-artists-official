@@ -53,6 +53,7 @@ const normalizeViewerResource = (node: any): any => {
 
 export default async function handler(req, res) {
   const { slug, viewer } = req.query;
+  const slugValue = Array.isArray(slug) ? slug[0] : slug;
   const manifestRef = CANOPY_MANIFESTS.find((item) => item.slug === slug);
 
   if (!manifestRef) {
@@ -73,7 +74,13 @@ export default async function handler(req, res) {
     const normalizedManifest = normalizeIiifPayload(manifest);
 
     if (viewer) {
-      return res.status(200).json(normalizeViewerResource(normalizedManifest));
+      const protocol = (req.headers["x-forwarded-proto"] as string) || "https";
+      const host = req.headers.host;
+      const localManifestId = `${protocol}://${host}/api/iiif/manifest/${slugValue}?viewer=1`;
+      const viewerManifest = normalizeViewerResource(normalizedManifest);
+      viewerManifest.id = localManifestId;
+
+      return res.status(200).json(viewerManifest);
     }
 
     return res.status(200).json(normalizedManifest);
