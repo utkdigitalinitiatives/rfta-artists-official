@@ -53,7 +53,7 @@ export async function getStaticProps({ params }) {
   return {
     props: {
       manifest,
-      manifestId: `/api/iiif/manifest/${slug}`,
+      manifestId: `/api/iiif/manifest/${slug}?viewer=1`,
     },
   };
 }
