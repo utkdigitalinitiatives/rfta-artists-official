@@ -1,5 +1,4 @@
 import { gql } from "@apollo/client";
-import { client } from "@/pages/api/graphql";
 import Layout from "@/components/layout";
 import Viewer from "@/components/Viewer/Viewer";
 import { Vault } from "@iiif/vault";
@@ -31,6 +30,7 @@ export default function Manifest({ manifest, manifestId }) {
 
 export async function getStaticProps({ params }) {
   const { slug } = params;
+  const { client } = await import("@/pages/api/graphql");
 
   const { loading, error, data } = await client.query({
     query: gql`
@@ -64,6 +64,7 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
+  const { client } = await import("@/pages/api/graphql");
   const { loading, error, data } = await client.query({
     query: gql`
       query Manifests {

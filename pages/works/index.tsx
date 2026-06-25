@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { gql } from "@apollo/client";
-import { client } from "@/pages/api/graphql";
 import Layout from "@/components/layout";
 import { InView } from "react-intersection-observer";
 import { map as lodashMap, groupBy as lodashGroupBy } from "lodash";
@@ -33,19 +32,27 @@ export default function Index({ manifests, metadata }) {
    * @returns
    */
   const fetchData = async (offset) => {
-    const { loading, error, data } = await client.query({
-      query: gql`
-        query Manifests {
-          manifests(limit: ${RESULT_LIMIT}, offset: ${offset}) {
-            id
-            label
-            slug
-            metadata
-            collectionId
+    const response = await fetch("/api/graphql", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        query: `
+          query Manifests {
+            manifests(limit: ${RESULT_LIMIT}, offset: ${offset}) {
+              id
+              label
+              slug
+              metadata
+              collectionId
+            }
           }
-        }
-      `,
+        `,
+      }),
     });
+    const payload = await response.json();
+    const data = payload?.data;
     if (data) return data;
   };
 
@@ -88,6 +95,7 @@ export default function Index({ manifests, metadata }) {
 }
 
 export async function getStaticProps() {
+  const { client } = await import("@/pages/api/graphql");
   const { loading, error, data } = await client.query({
     query: gql`
       query Manifests {

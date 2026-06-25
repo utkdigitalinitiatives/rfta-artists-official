@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { gql } from "@apollo/client";
-import { client } from "@/pages/api/graphql";
 import Layout from "@/components/layout";
 import { InView } from "react-intersection-observer";
 import { map as lodashMap, groupBy as lodashGroupBy } from "lodash";
 import Grid from "@/components/Grid/Grid";
-import {NextSeo} from "next-seo";
+import { NextSeo } from "next-seo";
 
 const RESULT_LIMIT = 20;
 
@@ -34,39 +33,46 @@ export default function Index({ manifests, metadata }) {
    * @returns
    */
   const fetchData = async (offset) => {
-    const { loading, error, data } = await client.query({
-      query: gql`
-        query Manifests {
-          manifests(limit: ${RESULT_LIMIT}, offset: ${offset}) {
-            id
-            label
-            slug
-            metadata
-            collectionId
+    const response = await fetch("/api/graphql", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        query: `
+          query Manifests {
+            manifests(limit: ${RESULT_LIMIT}, offset: ${offset}) {
+              id
+              label
+              slug
+              metadata
+              collectionId
+            }
           }
-        }
-      `,
+        `,
+      }),
     });
+    const payload = await response.json();
+    const data = payload?.data;
     if (data) return data;
   };
 
   return (
     <Layout>
       <NextSeo
-        title='Home'
-        description='Recording the experiences of those who lived through the tragic events of that day and commemorating the heroism and compassion of the community was the objective of Rising from the Ashes, an oral history project of the University of Tennessee Libraries, with support from the city of Gatlinburg and partnership from the Anna Porter Public Library. Drawing inspiration from the interviews recorded by this project, illustrators Paige Braddock, Marshall Ramsey, and Danny Wilson used their skills as graphic artists to further document the experiences of those who were impacted by these events. This work has been generously supported by a grant from the National Endowment for the Arts, specifically their Our Town program, which funds projects that strengthen communities through artistic and creative engagement.'
-        openGraph={
-          {
-            title: 'Rising from the Ashes Artists: About the Project',
-            description: 'Recording the experiences of those who lived through the tragic events of that day and commemorating the heroism and compassion of the community was the objective of Rising from the Ashes, an oral history project of the University of Tennessee Libraries, with support from the city of Gatlinburg and partnership from the Anna Porter Public Library. Drawing inspiration from the interviews recorded by this project, illustrators Paige Braddock, Marshall Ramsey, and Danny Wilson used their skills as graphic artists to further document the experiences of those who were impacted by these events. This work has been generously supported by a grant from the National Endowment for the Arts, specifically their Our Town program, which funds projects that strengthen communities through artistic and creative engagement.',
-            images: [
-              {
-                url: 'https://digital.lib.utk.edu/iiif/2/collections~islandora~object~rftaart%3A8~datastream~TN/full/max/0/default.jpg',
-                alt: `Image of Artwork created by Paige Braddock entitled 'A Family Embarces Their Well-Being'`
-              }
-            ]
-          }
-        }
+        title="Home"
+        description="Recording the experiences of those who lived through the tragic events of that day and commemorating the heroism and compassion of the community was the objective of Rising from the Ashes, an oral history project of the University of Tennessee Libraries, with support from the city of Gatlinburg and partnership from the Anna Porter Public Library. Drawing inspiration from the interviews recorded by this project, illustrators Paige Braddock, Marshall Ramsey, and Danny Wilson used their skills as graphic artists to further document the experiences of those who were impacted by these events. This work has been generously supported by a grant from the National Endowment for the Arts, specifically their Our Town program, which funds projects that strengthen communities through artistic and creative engagement."
+        openGraph={{
+          title: "Rising from the Ashes Artists: About the Project",
+          description:
+            "Recording the experiences of those who lived through the tragic events of that day and commemorating the heroism and compassion of the community was the objective of Rising from the Ashes, an oral history project of the University of Tennessee Libraries, with support from the city of Gatlinburg and partnership from the Anna Porter Public Library. Drawing inspiration from the interviews recorded by this project, illustrators Paige Braddock, Marshall Ramsey, and Danny Wilson used their skills as graphic artists to further document the experiences of those who were impacted by these events. This work has been generously supported by a grant from the National Endowment for the Arts, specifically their Our Town program, which funds projects that strengthen communities through artistic and creative engagement.",
+          images: [
+            {
+              url: "https://digital.lib.utk.edu/iiif/2/collections~islandora~object~rftaart%3A8~datastream~TN/full/max/0/default.jpg",
+              alt: `Image of Artwork created by Paige Braddock entitled 'A Family Embarces Their Well-Being'`,
+            },
+          ],
+        }}
       />
       <section
         style={{
@@ -95,14 +101,14 @@ export default function Index({ manifests, metadata }) {
             justifyContent: "flex-end",
             zIndex: "0",
           }}
-        >
-        </InView>
+        ></InView>
       </section>
     </Layout>
   );
 }
 
 export async function getStaticProps() {
+  const { client } = await import("@/pages/api/graphql");
   const { loading, error, data } = await client.query({
     query: gql`
       query Manifests {
