@@ -1,7 +1,4 @@
-const normalizeIiifUrl = (value: any) => {
-  if (!value || typeof value !== "string") return value;
-  return value.replace(/http:\/\/digital\.lib\.utk\.edu/gi, "https://digital.lib.utk.edu");
-};
+import { normalizeIiifUrl } from "./iiif-url";
 
 const buildCollection = (data: any) => {
   const { id, label, summary, homepage, items } = data;

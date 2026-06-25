@@ -1,7 +1,6 @@
 import { buildCollection } from "@/services/iiif-builder";
 import CANOPY_MANIFESTS from "@/.canopy/manifests.json";
 import CANOPY_METADATA from "@/.canopy/metadata.json";
-import absoluteUrl from "next-absolute-url";
 import { normalizeIiifUrl } from "@/services/iiif-url";
 
 const ARTIST_MAP = {
@@ -11,7 +10,19 @@ const ARTIST_MAP = {
     "danny-rftaart": "Wilson, Danny",
 };
 
-const getArtistItems = (artistValue: string) => {
+const getRequestOrigin = (req) => {
+    const forwardedProto = req.headers["x-forwarded-proto"];
+    const forwardedHost = req.headers["x-forwarded-host"];
+    const host = forwardedHost || req.headers.host;
+    const proto = Array.isArray(forwardedProto)
+        ? forwardedProto[0]
+        : (forwardedProto || "").split(",")[0].trim();
+
+    const safeProto = proto || (/localhost|127\.0\.0\.1/.test(host) ? "http" : "https");
+    return `${safeProto}://${host}`;
+};
+
+const getArtistItems = (artistValue: string, origin: string) => {
     const artistRows = CANOPY_METADATA.filter(
         (row) => row.label === "Artist" && row.value === artistValue
     );
@@ -24,7 +35,7 @@ const getArtistItems = (artistValue: string) => {
             if (!manifest) return null;
 
             return {
-                id: normalizeIiifUrl(manifest.id),
+                id: `${origin}/api/iiif/manifest/${manifest.slug}`,
                 label: manifest.label[0],
                 summary: `Artwork by ${artistValue}`,
                 homepage: `/works/${manifest.slug}`,
@@ -35,7 +46,7 @@ const getArtistItems = (artistValue: string) => {
 };
 
 export default function handler(req, res) {
-    const { origin } = absoluteUrl(req);
+    const origin = getRequestOrigin(req);
     const { slug } = req.query;
     const artistValue = ARTIST_MAP[slug as string];
 
@@ -43,7 +54,7 @@ export default function handler(req, res) {
         return res.status(404).json({ message: `Unknown collection slug: ${slug}` });
     }
 
-    const items = getArtistItems(artistValue).map((item) => ({
+    const items = getArtistItems(artistValue, origin).map((item) => ({
         ...item,
         homepage: `${origin}${item.homepage}`,
     }));

@@ -4,18 +4,23 @@ import { Label } from "@samvera/nectar-iiif";
 import { StyledRelated, RelatedWrapper, OuterStyledRelated } from "@/components/Related/Related.styled"
 
 const Related = ({ label, artist }) => {
-  const [baseUrl, setBaseUrl] = useState("");
+  const [collectionId, setCollectionId] = useState<string | null>(null);
   const bloom_values = {
     "Braddock, Paige": "/api/iiif/collection/paige-rftaart",
     "Daniel, Charles R. (Charlie), Jr., 1929-": "/api/iiif/collection/charlie-rftaart",
     "Ramsey, Marshall": "/api/iiif/collection/marshall-rftaart",
     "Wilson, Danny": "/api/iiif/collection/danny-rftaart"
   }
+
   useEffect(() => {
-    const { host, protocol } = window.location;
-    const root = `${protocol}//${host}`;
-    setBaseUrl(root);
-  }, []);
+    const collectionPath = bloom_values[artist];
+    if (!collectionPath) {
+      setCollectionId(null);
+      return;
+    }
+
+    setCollectionId(new URL(collectionPath, window.location.origin).toString());
+  }, [artist]);
 
   /**
    * @todo: create graphql query to find related (or just 10 random) and IIIF collection endpoint
@@ -28,8 +33,8 @@ const Related = ({ label, artist }) => {
             More like "<Label label={label} as="span" />"
           </h2>
           <div>
-            {baseUrl && bloom_values[artist] && (
-              <BloomIIIF collectionId={`${baseUrl}${bloom_values[artist]}`} />
+            {collectionId && (
+              <BloomIIIF collectionId={collectionId} />
             )}
           </div>
         </RelatedWrapper>
