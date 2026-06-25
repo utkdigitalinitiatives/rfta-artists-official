@@ -25,7 +25,7 @@ const getArtistItems = (artistValue: string) => {
       if (!manifest) return null;
 
       return {
-        id: normalizeIiifUrl(manifest.id),
+        id: `/api/iiif/manifest/${manifest.slug}?viewer=1`,
         label: manifest.label[0],
         summary: `Artwork by ${artistValue}`,
         homepage: `/works/${manifest.slug}`,
@@ -48,6 +48,7 @@ export default function handler(req, res) {
 
   const items = getArtistItems(artistValue).map((item) => ({
     ...item,
+    id: `${origin}${item.id}`,
     homepage: `${origin}${item.homepage}`,
   }));
 
