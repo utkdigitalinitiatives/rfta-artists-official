@@ -12,16 +12,7 @@ const normalizeManifestImages = (manifest: any) => {
 
                 const normalizeBody = (imageBody: any) => {
                     if (!imageBody || typeof imageBody.id !== "string") return;
-
-                    // Source OBJ datastreams are often TIFFs; force TN JPEG for viewer reliability.
-                    if (imageBody.id.includes("/datastream/OBJ")) {
-                        imageBody.id = normalizeIiifUrl(
-                            imageBody.id.replace("/datastream/OBJ", "/datastream/TN")
-                        );
-                        imageBody.format = "image/jpeg";
-                        delete imageBody.service;
-                        delete imageBody.services;
-                    }
+                    imageBody.id = normalizeIiifUrl(imageBody.id);
                 };
 
                 if (Array.isArray(body)) {
