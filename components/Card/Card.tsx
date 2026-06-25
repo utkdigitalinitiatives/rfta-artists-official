@@ -12,7 +12,7 @@ const Card = ({
 }) => {
   return (
     <Wrapper>
-      <Link href={path}>
+      <Link href={path} legacyBehavior>
         <a>
           <Figure resource={resource} size={size} isCover={isCover} />
           <Content>

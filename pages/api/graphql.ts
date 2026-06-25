@@ -74,7 +74,7 @@ const resolvers = {
             lower: true,
             strict: true,
             trim: true,
-          })
+          }),
       )[0];
     },
   },
@@ -85,21 +85,20 @@ const schema = makeExecutableSchema({
   resolvers,
 });
 
-const apolloServer = new ApolloServer({
-  schema,
-});
+const apolloServer =
+  typeof window === "undefined" ? new ApolloServer({ schema }) : (null as any);
 
-const startServer = apolloServer.start();
+const startServer = typeof window === "undefined" ? apolloServer.start() : null;
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Origin",
-    "https://studio.apollographql.com"
+    "https://studio.apollographql.com",
   );
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    "Origin, X-Requested-With, Content-Type, Accept",
   );
   if (req.method === "OPTIONS") {
     res.end();

@@ -40,7 +40,7 @@ const NavItems = ({ items }) => {
     <Items ref={wrapperRef} onMouseLeave={resetHighlight}>
       <Highlight ref={highlightRef} css={highlightStyles} />
       {items.map((item) => (
-        <Link href={item.path} key={item.path}>
+        <Link href={item.path} key={item.path} legacyBehavior>
           <a
             className={router.pathname == item.path ? "active" : ""}
             onMouseOver={(ev) => repositionHighlight(ev, item)}
