@@ -1,5 +1,5 @@
-import CANOPY_MANIFESTS from "../../../../.canopy/manifests.json";
 import { normalizeIiifPayload, normalizeIiifUrl } from "@/services/iiif-url";
+import { getCanopyManifests } from "@/services/canopy-data";
 
 const ISLANDORA_DATASTREAM_RE =
   /\/collections\/islandora\/object\/([^/]+)\/datastream\/(OBJ|JPG|TN)\b/i;
@@ -63,7 +63,8 @@ const normalizeViewerResource = (node: any): any => {
 export default async function handler(req, res) {
   const { slug, viewer } = req.query;
   const slugValue = Array.isArray(slug) ? slug[0] : slug;
-  const manifestRef = CANOPY_MANIFESTS.find((item) => item.slug === slugValue);
+  const canopyManifests = getCanopyManifests();
+  const manifestRef = canopyManifests.find((item) => item.slug === slugValue);
 
   if (!manifestRef) {
     return res

@@ -1,8 +1,7 @@
 import { buildCollection } from "@/services/iiif-builder";
-import CANOPY_MANIFESTS from "../../../../.canopy/manifests.json";
-import CANOPY_METADATA from "../../../../.canopy/metadata.json";
 import absoluteUrl from "next-absolute-url";
 import { normalizeIiifUrl } from "@/services/iiif-url";
+import { getCanopyManifests, getCanopyMetadata } from "@/services/canopy-data";
 
 const ARTIST_MAP = {
   "paige-rftaart": "Braddock, Paige",
@@ -12,13 +11,15 @@ const ARTIST_MAP = {
 };
 
 const getArtistItems = (artistValue: string) => {
-  const artistRows = CANOPY_METADATA.filter(
+  const canopyMetadata = getCanopyMetadata();
+  const canopyManifests = getCanopyManifests();
+  const artistRows = canopyMetadata.filter(
     (row) => row.label === "Artist" && row.value === artistValue,
   );
 
   return artistRows
     .map((row) => {
-      const manifest = CANOPY_MANIFESTS.find(
+      const manifest = canopyManifests.find(
         (item) =>
           normalizeIiifUrl(item.id) === normalizeIiifUrl(row.manifestId),
       );

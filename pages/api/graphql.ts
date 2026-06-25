@@ -3,9 +3,11 @@ import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { SchemaLink } from "@apollo/client/link/schema";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import slugify from "slugify";
-import CANOPY_COLLECTIONS from "../../.canopy/collections.json";
-import CANOPY_MANIFESTS from "../../.canopy/manifests.json";
-import CANOPY_METADATA from "../../.canopy/metadata.json";
+import {
+  getCanopyCollections,
+  getCanopyManifests,
+  getCanopyMetadata,
+} from "@/services/canopy-data";
 
 const typeDefs = gql`
   type Query {
@@ -53,21 +55,22 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     collections: async (_, __, context) => {
-      return CANOPY_COLLECTIONS;
+      return getCanopyCollections();
     },
     collectionItems: async (_, __, context) => {
-      return CANOPY_COLLECTIONS?.[0]?.items || [];
+      return getCanopyCollections()?.[0]?.items || [];
     },
     manifests: async (_, { limit, offset, id }, context) => {
-      return CANOPY_MANIFESTS;
+      return getCanopyManifests();
     },
 
     metadata: async (_, { id, label }, context) => {
-      if (CANOPY_METADATA) return CANOPY_METADATA;
+      const canopyMetadata = getCanopyMetadata();
+      if (canopyMetadata) return canopyMetadata;
     },
 
     getManifest: async (_, { slug }, context) => {
-      return CANOPY_MANIFESTS.filter(
+      return getCanopyManifests().filter(
         (item) =>
           slug ===
           slugify(item.label[0], {

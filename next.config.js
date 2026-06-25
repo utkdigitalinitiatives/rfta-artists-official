@@ -6,7 +6,7 @@ const {
 const config = require("./canopy.config");
 const canopy = require("./services/canopy");
 
-module.exports = (phase) => {
+module.exports = async (phase) => {
   const isDev = phase === PHASE_DEVELOPMENT_SERVER;
   const isProd = phase === PHASE_PRODUCTION_BUILD;
 
@@ -22,6 +22,6 @@ module.exports = (phase) => {
     ...config.environment,
   };
 
-  canopy.buildCanopy(env);
+  await canopy.buildCanopy(env);
   return { env };
 };

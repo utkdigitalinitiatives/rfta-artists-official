@@ -5,6 +5,7 @@ const {
   getValues,
 } = require("./build");
 const fs = require("fs");
+const fsp = fs.promises;
 const slugify = require("slugify");
 
 const normalizeIiifUrl = (value) => {
@@ -12,116 +13,62 @@ const normalizeIiifUrl = (value) => {
   return value.replace(/http:\/\/digital\.lib\.utk\.edu/gi, "https://digital.lib.utk.edu");
 };
 
-module.exports.buildCanopy = (env) => {
-  getRootCollection(env.collection).then((json) => {
-    /**
-     * set directory to write canopy structure to
-     */
-    const canopyDirectory = ".canopy";
+module.exports.buildCanopy = async (env) => {
+  const canopyDirectory = ".canopy";
+  const json = await getRootCollection(env.collection);
 
-    /**
-     * generate collection data
-     */
-    console.log(`Generating collection data...`);
-    const canopyCollection = buildCanopyCollection(json, 0, null);
+  console.log(`Generating collection data...`);
+  const canopyCollection = buildCanopyCollection(json, 0, null);
 
-    try {
-      if (!fs.existsSync(canopyDirectory)) {
-        fs.mkdirSync(canopyDirectory);
-      }
-    } catch (err) {
-      console.error(err);
-    }
+  await fsp.mkdir(canopyDirectory, { recursive: true });
 
-    fs.writeFile(
-      `${canopyDirectory}/collections.json`,
-      JSON.stringify([canopyCollection]),
-      (err) => {
-        if (err) {
-          console.error(err);
+  await fsp.writeFile(
+    `${canopyDirectory}/collections.json`,
+    JSON.stringify([canopyCollection]),
+  );
+
+  console.log(`Creating manifest listing...`);
+  const canopyManifests = canopyCollection.items
+    .filter((item) => item.type === "Manifest")
+    .map((item) => ({
+      collectionId: normalizeIiifUrl(item.parent),
+      id: normalizeIiifUrl(item.id),
+      label: item.label,
+      slug: slugify(item.label[0], env.slugify),
+    }));
+
+  await fsp.writeFile(
+    `${canopyDirectory}/manifests.json`,
+    JSON.stringify(canopyManifests),
+  );
+
+  await fsp.writeFile(`${canopyDirectory}/metadata.json`, JSON.stringify([]));
+
+  console.log(`Flattening prescribed metadata...`);
+  const manifests = await getBulkManifests(canopyManifests, 25);
+  const canopyMetadata = [];
+
+  manifests
+    .filter((manifest) => manifest)
+    .forEach((manifest) => {
+      manifest.metadata.forEach((metadata) => {
+        const metadataLabel = getValues(metadata.label)[0];
+        const metadataValues = getValues(metadata.value);
+        if (env.metadata.includes(metadataLabel)) {
+          metadataValues.forEach((value) => {
+            canopyMetadata.push({
+              manifestId: normalizeIiifUrl(manifest.id),
+              label: metadataLabel,
+              value,
+              thumbnail: normalizeIiifUrl(manifest.thumbnail[0].id),
+            });
+          });
         }
-      }
-    );
-
-    /**
-     * create manifest listing
-     */
-    console.log(`Creating manifest listing...`);
-    const canopyManifests = canopyCollection.items.map((item) => {
-      /**
-       * what should label look like at this point?
-       * language for label?
-       * are they unique?
-       */
-      if (item.type === "Manifest")
-        return {
-          collectionId: normalizeIiifUrl(item.parent),
-          id: normalizeIiifUrl(item.id),
-          label: item.label,
-          slug: slugify(item.label[0], env.slugify),
-        };
+      });
     });
 
-    fs.writeFile(
-      `${canopyDirectory}/manifests.json`,
-      JSON.stringify(canopyManifests),
-      (err) => {
-        if (err) {
-          console.error(err);
-        }
-      }
-    );
-
-    /**
-     * flatten metadata
-     */
-
-    fs.writeFile(
-      `${canopyDirectory}/metadata.json`,
-      JSON.stringify([]),
-      (err) => {
-        if (err) {
-          console.error(err);
-        }
-      }
-    );
-
-    console.log(`Flattening prescribed metadata...`);
-    const responses = getBulkManifests(canopyManifests, 25);
-
-    responses.then((manifests) => {
-      let canopyMetadata = [];
-      manifests
-        .filter((manifest) => {
-          if (manifest) return manifest;
-        })
-        .map((manifest) =>
-          manifest.metadata.forEach((metadata) => {
-            const metadataLabel = getValues(metadata.label)[0];
-            const metadataValues = getValues(metadata.value);
-            if (env.metadata.includes(metadataLabel)) {
-              metadataValues.forEach((value) => {
-                const result = {
-                  manifestId: normalizeIiifUrl(manifest.id),
-                  label: metadataLabel,
-                  value,
-                  thumbnail: normalizeIiifUrl(manifest.thumbnail[0].id),
-                };
-                canopyMetadata.push(result);
-              });
-            }
-          })
-        );
-
-      fs.writeFile(
-        `${canopyDirectory}/metadata.json`,
-        JSON.stringify(canopyMetadata),
-        (err) => {
-          if (err) {
-            console.error(err);
-          }
-        }
-      );
-    });
-  });
+  await fsp.writeFile(
+    `${canopyDirectory}/metadata.json`,
+    JSON.stringify(canopyMetadata),
+  );
 };
