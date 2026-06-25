@@ -1,6 +1,11 @@
 import Link from "next/link";
 import Nav from "@/components/Nav/Nav";
-import { Title, Subtitle, Wrapper, TitleWrapper } from "@/components/Header/Header.styled";
+import {
+  Title,
+  Subtitle,
+  Wrapper,
+  TitleWrapper,
+} from "@/components/Header/Header.styled";
 import IIIF from "@/components/SVG/IIIF";
 
 const title = process.env.title;
@@ -9,7 +14,7 @@ const collection = process.env.collection;
 
 const navItems = [
   { path: "/", text: "Browse Art" },
-  { path: "/artists", text: "About"},
+  { path: "/artists", text: "About" },
 ];
 
 const Header = () => {
@@ -17,12 +22,12 @@ const Header = () => {
     <Wrapper>
       <TitleWrapper>
         <Title>
-          <Link href="/">
+          <Link href="/" legacyBehavior>
             <a>{title}</a>
           </Link>
         </Title>
         <Subtitle>
-          <Link href="/">
+          <Link href="/" legacyBehavior>
             <a>{subtitle}</a>
           </Link>
         </Subtitle>

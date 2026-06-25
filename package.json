@@ -16,16 +16,18 @@
     "@samvera/nectar-iiif": "^0.0.15",
     "@stitches/react": "^1.2.6",
     "@types/react": "^17.0.44",
-    "@types/react-dom": "^18.0.0",
+    "@types/react-dom": "^17.0.11",
     "apollo-server-micro": "^3.0.1",
     "axios": "^0.24.0",
     "clsx": "^1.1.1",
     "graphql": "^15.8.0",
     "iiif-builder": "^1.0.4",
     "lodash": "^4.17.21",
-    "next": "latest",
+    "micro": "^9.3.4",
+    "next": "12.2.5",
     "next-absolute-url": "^1.2.2",
     "next-seo": "^5.4.0",
+    "openseadragon": "^3.1.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-intersection-observer": "^8.33.1",
@@ -36,9 +38,5 @@
   "devDependencies": {
     "@types/lodash": "^4.14.178",
     "typescript": "^4.5.4"
-  },
-  "resolutions": {
-    "@types/react": "17.0.44",
-    "@types/react-dom": "18.0.0"
   }
 }
