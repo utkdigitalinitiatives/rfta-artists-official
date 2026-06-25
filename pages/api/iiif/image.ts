@@ -39,7 +39,7 @@ export default async function handler(req: any, res: any) {
         try {
             const primaryResponse = await fetch(primary, { signal: controller.signal });
             clearTimeout(timeout);
-            
+
             if (isRenderableImage(primaryResponse)) {
                 const buffer = Buffer.from(await primaryResponse.arrayBuffer());
                 res.setHeader("Vary", "Accept");
@@ -63,7 +63,7 @@ export default async function handler(req: any, res: any) {
         try {
             const fallbackResponse = await fetch(fallback, { signal: fallbackController.signal });
             clearTimeout(fallbackTimeout);
-            
+
             if (!isRenderableImage(fallbackResponse)) {
                 return res.status(502).json({
                     message: "Neither primary nor fallback returned a renderable image",

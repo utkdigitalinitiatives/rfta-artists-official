@@ -1,7 +1,8 @@
 import CANOPY_MANIFESTS from "@/.canopy/manifests.json";
 import { normalizeIiifPayload, normalizeIiifUrl } from "@/services/iiif-url";
+import absoluteUrl from "next-absolute-url";
 
-const normalizeManifestImages = (manifest: any) => {
+const normalizeManifestImages = (manifest: any, origin: string) => {
     if (!manifest?.items) return manifest;
 
     manifest.items.forEach((canvas: any) => {
@@ -12,7 +13,19 @@ const normalizeManifestImages = (manifest: any) => {
 
                 const normalizeBody = (imageBody: any) => {
                     if (!imageBody || typeof imageBody.id !== "string") return;
-                    imageBody.id = normalizeIiifUrl(imageBody.id);
+                    
+                    const normalized = normalizeIiifUrl(imageBody.id);
+                    
+                    // Route OBJ through proxy with TN fallback for renderable output
+                    if (normalized.includes("/datastream/OBJ")) {
+                        const fallback = normalizeIiifUrl(
+                            normalized.replace("/datastream/OBJ", "/datastream/TN")
+                        );
+                        imageBody.id = `${origin}/api/iiif/image?primary=${encodeURIComponent(normalized)}&fallback=${encodeURIComponent(fallback)}`;
+                        imageBody.format = "image/jpeg";
+                    } else {
+                        imageBody.id = normalized;
+                    }
                 };
 
                 if (Array.isArray(body)) {
@@ -28,7 +41,8 @@ const normalizeManifestImages = (manifest: any) => {
     return manifest;
 };
 
-export default async function handler(req, res) {
+export default async function handler(req: any, res: any) {
+    const { origin } = absoluteUrl(req);
     const { slug } = req.query;
     const manifestRef = CANOPY_MANIFESTS.find((item) => item.slug === slug);
 
@@ -43,9 +57,9 @@ export default async function handler(req, res) {
         }
 
         const manifest = await response.json();
-        const normalized = normalizeManifestImages(normalizeIiifPayload(manifest));
+        const normalized = normalizeManifestImages(normalizeIiifPayload(manifest), origin);
         return res.status(200).json(normalized);
-    } catch (error) {
+    } catch (error: any) {
         return res.status(500).json({ message: `Manifest fetch failed: ${error.message}` });
     }
 }
