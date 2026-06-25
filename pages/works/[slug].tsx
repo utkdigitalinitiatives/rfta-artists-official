@@ -11,7 +11,9 @@ import WorkInner from "@/components/Work/Inner";
 export default function Manifest({ manifest, manifestId }) {
   const { label, metadata, summary, thumbnail } = manifest;
   const artist = metadata.filter(function (x) {
-    if (x.label.en[0] == "Artist") { return x.value.en[0] }
+    if (x.label.en[0] == "Artist") {
+      return x.value.en[0];
+    }
   })[0].value.en[0];
 
   return (
