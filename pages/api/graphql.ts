@@ -3,9 +3,32 @@ import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { SchemaLink } from "@apollo/client/link/schema";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import slugify from "slugify";
-import CANOPY_COLLECTIONS from "../../.canopy/collections.json";
-import CANOPY_MANIFESTS from "../../.canopy/manifests.json";
-import CANOPY_METADATA from "../../.canopy/metadata.json";
+
+const loadCanopyJson = <T>(filename: string, fallback: T): T => {
+  // This module is imported by both API routes and page code.
+  // Avoid touching node-only paths during browser bundling.
+  if (typeof window !== "undefined") return fallback;
+
+  try {
+    if (filename === "collections.json") {
+      return require("../../.canopy/collections.json") as T;
+    }
+    if (filename === "manifests.json") {
+      return require("../../.canopy/manifests.json") as T;
+    }
+    if (filename === "metadata.json") {
+      return require("../../.canopy/metadata.json") as T;
+    }
+  } catch (error) {
+    console.error(`Failed to load .canopy/${filename}:`, error);
+  }
+
+  return fallback;
+};
+
+const CANOPY_COLLECTIONS = loadCanopyJson<any[]>("collections.json", []);
+const CANOPY_MANIFESTS = loadCanopyJson<any[]>("manifests.json", []);
+const CANOPY_METADATA = loadCanopyJson<any[]>("metadata.json", []);
 
 const typeDefs = gql`
   type Query {

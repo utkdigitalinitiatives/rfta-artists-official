@@ -1,19 +1,37 @@
-import CANOPY_MANIFESTS from "../../../../.canopy/manifests.json";
 import { normalizeIiifPayload, normalizeIiifUrl } from "@/services/iiif-url";
+
+const loadCanopyJson = <T>(filename: string, fallback: T): T => {
+  try {
+    if (filename === "manifests.json") {
+      return require("../../../../.canopy/manifests.json") as T;
+    }
+  } catch (error) {
+    console.error(`Failed to load .canopy/${filename}:`, error);
+  }
+
+  return fallback;
+};
+
+const CANOPY_MANIFESTS = loadCanopyJson<any[]>("manifests.json", []);
 
 const ISLANDORA_DATASTREAM_RE =
   /\/collections\/islandora\/object\/([^/]+)\/datastream\/(OBJ|JPG|TN)\b/i;
 
-const mapDatastreamToImageApi = () => "OBJ";
+const mapDatastreamToImageApi = (datastream: string) => {
+  // Some Islandora records return 500 for OBJ info.json while JPG works.
+  if (datastream.toUpperCase() === "OBJ") return "JPG";
+  return datastream.toUpperCase();
+};
 
 const toImageServiceId = (resourceId: string) => {
   const match = resourceId.match(ISLANDORA_DATASTREAM_RE);
   if (!match) return null;
 
-  const [, objectId] = match;
-  const imageDatastream = mapDatastreamToImageApi();
+  const [, objectId, datastream] = match;
+  const decodedObjectId = decodeURIComponent(objectId);
+  const imageDatastream = mapDatastreamToImageApi(datastream);
 
-  return `https://digital.lib.utk.edu/iiif/2/collections~islandora~object~${objectId}~datastream~${imageDatastream}`;
+  return `https://digital.lib.utk.edu/iiif/2/collections~islandora~object~${decodedObjectId}~datastream~${imageDatastream}`;
 };
 
 const normalizeViewerResource = (node: any): any => {
