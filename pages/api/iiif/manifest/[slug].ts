@@ -15,8 +15,8 @@ const loadCanopyJson = <T>(filename: string, fallback: T): T => {
 const CANOPY_MANIFESTS = loadCanopyJson<any[]>("manifests.json", []);
 const MANIFEST_CACHE_CONTROL =
   "public, s-maxage=3600, stale-while-revalidate=86400, max-age=600";
-const FETCH_TIMEOUT_MS = 1800;
-const DATASTREAM_PROBE_TIMEOUT_MS = 4500;
+const FETCH_TIMEOUT_MS = 10000;
+const DATASTREAM_PROBE_TIMEOUT_MS = 8000;
 
 const ISLANDORA_DATASTREAM_RE =
   /\/collections\/islandora\/object\/([^/]+)\/datastream\/(OBJ|JPG|TN)\b/i;
