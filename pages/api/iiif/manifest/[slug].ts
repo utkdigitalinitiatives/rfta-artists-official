@@ -22,7 +22,13 @@ const ISLANDORA_DATASTREAM_RE =
   /\/collections\/islandora\/object\/([^/]+)\/datastream\/(OBJ|JPG|TN)\b/i;
 
 const DATASTREAM_SEGMENT_RE = /\/datastream\/(OBJ|JPG|TN)\b/i;
-const iiifDatastreamCache = new Map<string, string>();
+type DatastreamProbeResult = {
+  datastream: string;
+  width?: number;
+  height?: number;
+};
+
+const iiifDatastreamCache = new Map<string, DatastreamProbeResult>();
 const normalizedManifestCache = new Map<string, Promise<any>>();
 const viewerManifestCache = new Map<string, Promise<any>>();
 const SERVICE_DATASTREAM_PREFERENCE = ["OBJ", "JP2", "JPG", "TN"];
@@ -86,7 +92,20 @@ const probeDatastreamAvailability = async (
       DATASTREAM_PROBE_TIMEOUT_MS,
     );
 
-    return response.ok ? datastream : null;
+    if (!response.ok) return null;
+
+    let width: number | undefined;
+    let height: number | undefined;
+
+    try {
+      const info = await response.json();
+      if (typeof info?.width === "number") width = info.width;
+      if (typeof info?.height === "number") height = info.height;
+    } catch (error) {
+      // Keep datastream eligibility even when metadata parsing fails.
+    }
+
+    return { datastream, width, height };
   } catch (error) {
     return null;
   }
@@ -94,13 +113,13 @@ const probeDatastreamAvailability = async (
 
 const resolvePreferredServiceDatastream = async (resourceId: string) => {
   const match = resourceId.match(ISLANDORA_DATASTREAM_RE);
-  if (!match) return "JPG";
+  if (!match) return { datastream: "JPG" };
 
   const [, objectId] = match;
   const decodedObjectId = decodeURIComponent(objectId);
   const cacheKey = decodedObjectId.toLowerCase();
   if (iiifDatastreamCache.has(cacheKey)) {
-    return iiifDatastreamCache.get(cacheKey) || "JPG";
+    return iiifDatastreamCache.get(cacheKey) || { datastream: "JPG" };
   }
 
   const availabilityChecks = await Promise.all(
@@ -109,17 +128,19 @@ const resolvePreferredServiceDatastream = async (resourceId: string) => {
     ),
   );
 
-  const available = new Set(
-    availabilityChecks.filter((value): value is string => Boolean(value)),
-  );
+  const available = availabilityChecks.filter(
+    Boolean,
+  ) as DatastreamProbeResult[];
 
-  const resolvedDatastream =
-    SERVICE_DATASTREAM_PREFERENCE.find((datastream) =>
-      available.has(datastream),
-    ) || "JPG";
+  const resolvedProbe = SERVICE_DATASTREAM_PREFERENCE.map(
+    (preferredDatastream) =>
+      available.find((result) => result.datastream === preferredDatastream),
+  ).find(Boolean) || {
+    datastream: "JPG",
+  };
 
-  iiifDatastreamCache.set(cacheKey, resolvedDatastream);
-  return resolvedDatastream;
+  iiifDatastreamCache.set(cacheKey, resolvedProbe);
+  return resolvedProbe;
 };
 
 const getViewerManifest = (manifestId: string) => {
@@ -171,11 +192,11 @@ const normalizeViewerResource = async (node: any): Promise<any> => {
 
     const match = normalized.id.match(ISLANDORA_DATASTREAM_RE);
     const originalDatastream = match?.[2]?.toUpperCase();
-    const resolvedServiceDatastream = await resolvePreferredServiceDatastream(
+    const resolvedService = await resolvePreferredServiceDatastream(
       normalized.id,
     );
     const serviceDatastream =
-      resolvedServiceDatastream || originalDatastream || "JPG";
+      resolvedService.datastream || originalDatastream || "JPG";
     const imageId = normalized.id.replace(
       DATASTREAM_SEGMENT_RE,
       "/datastream/JPG",
@@ -187,6 +208,14 @@ const normalizeViewerResource = async (node: any): Promise<any> => {
         ...normalized,
         id: imageId,
         format: "image/jpeg",
+        width:
+          typeof resolvedService.width === "number"
+            ? resolvedService.width
+            : normalized.width,
+        height:
+          typeof resolvedService.height === "number"
+            ? resolvedService.height
+            : normalized.height,
         service: [
           {
             id: serviceId,
