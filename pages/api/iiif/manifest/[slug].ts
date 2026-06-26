@@ -13,13 +13,79 @@ const loadCanopyJson = <T>(filename: string, fallback: T): T => {
 };
 
 const CANOPY_MANIFESTS = loadCanopyJson<any[]>("manifests.json", []);
+const MANIFEST_CACHE_CONTROL =
+  "public, s-maxage=3600, stale-while-revalidate=86400, max-age=600";
+const FETCH_TIMEOUT_MS = 1800;
 
 const ISLANDORA_DATASTREAM_RE =
   /\/collections\/islandora\/object\/([^/]+)\/datastream\/(OBJ|JPG|TN)\b/i;
 
 const DATASTREAM_SEGMENT_RE = /\/datastream\/(OBJ|JPG|TN)\b/i;
 const iiifDatastreamCache = new Map<string, string>();
+const normalizedManifestCache = new Map<string, Promise<any>>();
+const viewerManifestCache = new Map<string, Promise<any>>();
 const SERVICE_DATASTREAM_PREFERENCE = ["OBJ", "JP2", "JPG", "TN"];
+
+const fetchWithTimeout = async (
+  url: string,
+  init?: RequestInit,
+  timeoutMs = FETCH_TIMEOUT_MS,
+) => {
+  const controller =
+    typeof AbortController !== "undefined" ? new AbortController() : null;
+  const timeoutId = controller
+    ? setTimeout(() => controller.abort(), timeoutMs)
+    : null;
+
+  try {
+    return await fetch(url, {
+      ...init,
+      ...(controller ? { signal: controller.signal } : {}),
+    });
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
+};
+
+const getNormalizedManifest = (manifestId: string) => {
+  const cacheKey = normalizeIiifUrl(manifestId);
+
+  if (!normalizedManifestCache.has(cacheKey)) {
+    normalizedManifestCache.set(
+      cacheKey,
+      (async () => {
+        const response = await fetchWithTimeout(cacheKey);
+        if (!response.ok) {
+          throw new Error(`Failed to load manifest (${response.status})`);
+        }
+
+        const manifest = await response.json();
+        return normalizeIiifPayload(manifest);
+      })(),
+    );
+  }
+
+  return normalizedManifestCache.get(cacheKey)!;
+};
+
+const probeDatastreamAvailability = async (
+  decodedObjectId: string,
+  datastream: string,
+) => {
+  const infoUrl = `https://digital.lib.utk.edu/iiif/2/collections~islandora~object~${decodedObjectId}~datastream~${datastream}/info.json`;
+
+  try {
+    const response = await fetchWithTimeout(infoUrl, {
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    return response.ok ? datastream : null;
+  } catch (error) {
+    return null;
+  }
+};
 
 const resolvePreferredServiceDatastream = async (resourceId: string) => {
   const match = resourceId.match(ISLANDORA_DATASTREAM_RE);
@@ -32,27 +98,38 @@ const resolvePreferredServiceDatastream = async (resourceId: string) => {
     return iiifDatastreamCache.get(cacheKey) || "JPG";
   }
 
-  for (const datastream of SERVICE_DATASTREAM_PREFERENCE) {
-    const infoUrl = `https://digital.lib.utk.edu/iiif/2/collections~islandora~object~${decodedObjectId}~datastream~${datastream}/info.json`;
+  const availabilityChecks = await Promise.all(
+    SERVICE_DATASTREAM_PREFERENCE.map((datastream) =>
+      probeDatastreamAvailability(decodedObjectId, datastream),
+    ),
+  );
 
-    try {
-      const response = await fetch(infoUrl, {
-        headers: {
-          Accept: "application/json",
-        },
-      });
+  const available = new Set(
+    availabilityChecks.filter((value): value is string => Boolean(value)),
+  );
 
-      if (response.ok) {
-        iiifDatastreamCache.set(cacheKey, datastream);
-        return datastream;
-      }
-    } catch (error) {
-      // Keep trying lower-priority datastreams when upstream errors.
-    }
+  const resolvedDatastream =
+    SERVICE_DATASTREAM_PREFERENCE.find((datastream) =>
+      available.has(datastream),
+    ) || "JPG";
+
+  iiifDatastreamCache.set(cacheKey, resolvedDatastream);
+  return resolvedDatastream;
+};
+
+const getViewerManifest = (manifestId: string) => {
+  const cacheKey = normalizeIiifUrl(manifestId);
+
+  if (!viewerManifestCache.has(cacheKey)) {
+    viewerManifestCache.set(
+      cacheKey,
+      getNormalizedManifest(manifestId).then((manifest) =>
+        normalizeViewerResource(manifest),
+      ),
+    );
   }
 
-  iiifDatastreamCache.set(cacheKey, "JPG");
-  return "JPG";
+  return viewerManifestCache.get(cacheKey)!;
 };
 
 const toImageServiceId = (resourceId: string, datastream: string) => {
@@ -83,6 +160,10 @@ const normalizeViewerResource = async (node: any): Promise<any> => {
   >;
 
   if (normalized.type === "Image" && typeof normalized.id === "string") {
+    if (normalized.service) {
+      return normalized;
+    }
+
     const match = normalized.id.match(ISLANDORA_DATASTREAM_RE);
     const originalDatastream = match?.[2]?.toUpperCase();
     const resolvedServiceDatastream = await resolvePreferredServiceDatastream(
@@ -119,7 +200,7 @@ const normalizeViewerResource = async (node: any): Promise<any> => {
 export default async function handler(req, res) {
   const { slug, viewer } = req.query;
   const slugValue = Array.isArray(slug) ? slug[0] : slug;
-  const manifestRef = CANOPY_MANIFESTS.find((item) => item.slug === slug);
+  const manifestRef = CANOPY_MANIFESTS.find((item) => item.slug === slugValue);
 
   if (!manifestRef) {
     return res
@@ -128,28 +209,29 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch(normalizeIiifUrl(manifestRef.id));
-    if (!response.ok) {
-      return res
-        .status(response.status)
-        .json({ message: "Failed to load manifest" });
-    }
-
-    const manifest = await response.json();
-    const normalizedManifest = normalizeIiifPayload(manifest);
+    res.setHeader("Cache-Control", MANIFEST_CACHE_CONTROL);
 
     if (viewer) {
       const protocol = (req.headers["x-forwarded-proto"] as string) || "https";
-      const host = req.headers.host;
-      const localManifestId = `${protocol}://${host}/api/iiif/manifest/${slugValue}?viewer=1`;
-      const viewerManifest = await normalizeViewerResource(normalizedManifest);
-      viewerManifest.id = localManifestId;
+      const host =
+        (req.headers["x-forwarded-host"] as string) || req.headers.host;
+      const localManifestId = host
+        ? `${protocol}://${host}/api/iiif/manifest/${slugValue}?viewer=1`
+        : `/api/iiif/manifest/${slugValue}?viewer=1`;
+      const viewerManifest = await getViewerManifest(manifestRef.id);
 
-      return res.status(200).json(viewerManifest);
+      return res.status(200).json({
+        ...viewerManifest,
+        id: localManifestId,
+      });
     }
 
+    const normalizedManifest = await getNormalizedManifest(manifestRef.id);
     return res.status(200).json(normalizedManifest);
   } catch (error) {
+    normalizedManifestCache.delete(normalizeIiifUrl(manifestRef.id));
+    viewerManifestCache.delete(normalizeIiifUrl(manifestRef.id));
+
     return res
       .status(500)
       .json({ message: `Manifest fetch failed: ${error.message}` });
