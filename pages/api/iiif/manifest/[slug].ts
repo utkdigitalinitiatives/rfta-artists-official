@@ -4,16 +4,21 @@ import { normalizeIiifPayload, normalizeIiifUrl } from "@/services/iiif-url";
 const ISLANDORA_DATASTREAM_RE =
   /\/collections\/islandora\/object\/([^/]+)\/datastream\/(OBJ|JPG|TN)\b/i;
 
-const mapDatastreamToImageApi = () => "OBJ";
+const mapDatastreamToImageApi = (datastream: string) => {
+  // Islandora IIIF info.json endpoints can fail for OBJ while JPG works.
+  if (datastream.toUpperCase() === "OBJ") return "JPG";
+  return datastream.toUpperCase();
+};
 
 const toImageServiceId = (resourceId: string) => {
   const match = resourceId.match(ISLANDORA_DATASTREAM_RE);
   if (!match) return null;
 
-  const [, objectId] = match;
-  const imageDatastream = mapDatastreamToImageApi();
+  const [, objectId, datastream] = match;
+  const decodedObjectId = decodeURIComponent(objectId);
+  const imageDatastream = mapDatastreamToImageApi(datastream);
 
-  return `https://digital.lib.utk.edu/iiif/2/collections~islandora~object~${objectId}~datastream~${imageDatastream}`;
+  return `https://digital.lib.utk.edu/iiif/2/collections~islandora~object~${decodedObjectId}~datastream~${imageDatastream}`;
 };
 
 const normalizeViewerResource = (node: any): any => {
