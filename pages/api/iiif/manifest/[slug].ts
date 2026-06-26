@@ -31,7 +31,7 @@ type DatastreamProbeResult = {
 const iiifDatastreamCache = new Map<string, DatastreamProbeResult>();
 const normalizedManifestCache = new Map<string, Promise<any>>();
 const viewerManifestCache = new Map<string, Promise<any>>();
-const SERVICE_DATASTREAM_PREFERENCE = ["OBJ", "JP2", "JPG", "TN"];
+const SERVICE_DATASTREAM_PREFERENCE = ["JP2", "OBJ", "JPG", "TN"];
 
 const fetchWithTimeout = async (
   url: string,
@@ -244,16 +244,12 @@ const normalizeViewerResource = async (node: any): Promise<any> => {
     );
     const serviceDatastream =
       resolvedService.datastream || originalDatastream || "JPG";
-    const imageId = normalized.id.replace(
-      DATASTREAM_SEGMENT_RE,
-      "/datastream/JPG",
-    );
     const serviceId = toImageServiceId(normalized.id, serviceDatastream);
 
     if (serviceId) {
       return {
         ...normalized,
-        id: imageId,
+        id: `${serviceId}/full/full/0/default.jpg`,
         format: "image/jpeg",
         width:
           typeof resolvedService.width === "number"
