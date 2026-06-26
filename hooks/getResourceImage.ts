@@ -1,4 +1,4 @@
-import { normalizeIiifUrl } from "@/services/iiif-url";
+import { normalizeIiifUrl, toIiifImageApiUrl } from "@/services/iiif-url";
 
 export const getResourceImage = (resource, size = "600,", region = "full") => {
   if (!resource) return null;
@@ -7,11 +7,8 @@ export const getResourceImage = (resource, size = "600,", region = "full") => {
   let image = normalizeIiifUrl(resource.id);
 
   if (!resource.service) {
-    // Fallback to the TN datastream when a IIIF service is unavailable.
-    if (image?.includes("/datastream/OBJ")) {
-      return image.replace("/datastream/OBJ", "/datastream/TN");
-    }
-    return image;
+    // Prefer IIIF Image API URLs over raw datastream URLs for browser compatibility.
+    return toIiifImageApiUrl(image, region, size);
   }
 
   if (!Array.isArray(resource.service)) {
