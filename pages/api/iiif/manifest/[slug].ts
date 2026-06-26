@@ -17,43 +17,80 @@ const CANOPY_MANIFESTS = loadCanopyJson<any[]>("manifests.json", []);
 const ISLANDORA_DATASTREAM_RE =
   /\/collections\/islandora\/object\/([^/]+)\/datastream\/(OBJ|JPG|TN)\b/i;
 
-const mapDatastreamToImageApi = (datastream: string) => {
-  // Some Islandora records return 500 for OBJ info.json while JPG works.
-  if (datastream.toUpperCase() === "OBJ") return "JPG";
-  return datastream.toUpperCase();
+const DATASTREAM_SEGMENT_RE = /\/datastream\/(OBJ|JPG|TN)\b/i;
+const iiifDatastreamCache = new Map<string, string>();
+
+const shouldUseObjService = async (resourceId: string) => {
+  const match = resourceId.match(ISLANDORA_DATASTREAM_RE);
+  if (!match) return false;
+
+  const [, objectId] = match;
+  const decodedObjectId = decodeURIComponent(objectId);
+  const cacheKey = decodedObjectId.toLowerCase();
+  if (iiifDatastreamCache.has(cacheKey)) {
+    return iiifDatastreamCache.get(cacheKey) === "OBJ";
+  }
+
+  const objInfoUrl = `https://digital.lib.utk.edu/iiif/2/collections~islandora~object~${decodedObjectId}~datastream~OBJ/info.json`;
+
+  try {
+    const response = await fetch(objInfoUrl, {
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    const resolved = response.ok ? "OBJ" : "JPG";
+    iiifDatastreamCache.set(cacheKey, resolved);
+    return resolved === "OBJ";
+  } catch (error) {
+    iiifDatastreamCache.set(cacheKey, "JPG");
+    return false;
+  }
 };
 
-const toImageServiceId = (resourceId: string) => {
+const toImageServiceId = (resourceId: string, datastream: string) => {
   const match = resourceId.match(ISLANDORA_DATASTREAM_RE);
   if (!match) return null;
 
-  const [, objectId, datastream] = match;
+  const [, objectId] = match;
   const decodedObjectId = decodeURIComponent(objectId);
-  const imageDatastream = mapDatastreamToImageApi(datastream);
+  const imageDatastream = datastream.toUpperCase();
 
   return `https://digital.lib.utk.edu/iiif/2/collections~islandora~object~${decodedObjectId}~datastream~${imageDatastream}`;
 };
 
-const normalizeViewerResource = (node: any): any => {
+const normalizeViewerResource = async (node: any): Promise<any> => {
   if (Array.isArray(node))
-    return node.map((item) => normalizeViewerResource(item));
+    return Promise.all(node.map((item) => normalizeViewerResource(item)));
   if (!node || typeof node !== "object") return node;
 
-  const normalizedEntries = Object.entries(node).map(([key, value]) => [
-    key,
-    normalizeViewerResource(value),
-  ]);
+  const normalizedEntries = await Promise.all(
+    Object.entries(node).map(async ([key, value]) => [
+      key,
+      await normalizeViewerResource(value),
+    ]),
+  );
   const normalized = Object.fromEntries(normalizedEntries) as Record<
     string,
     any
   >;
 
   if (normalized.type === "Image" && typeof normalized.id === "string") {
+    const match = normalized.id.match(ISLANDORA_DATASTREAM_RE);
+    const originalDatastream = match?.[2]?.toUpperCase();
+    const useObjService =
+      originalDatastream === "OBJ"
+        ? await shouldUseObjService(normalized.id)
+        : false;
+    const serviceDatastream = useObjService
+      ? "OBJ"
+      : originalDatastream || "JPG";
     const imageId = normalized.id.replace(
-      /\/datastream\/(OBJ|JPG|TN)\b/i,
+      DATASTREAM_SEGMENT_RE,
       "/datastream/JPG",
     );
-    const serviceId = toImageServiceId(normalized.id);
+    const serviceId = toImageServiceId(normalized.id, serviceDatastream);
 
     if (serviceId) {
       return {
@@ -101,7 +138,7 @@ export default async function handler(req, res) {
       const protocol = (req.headers["x-forwarded-proto"] as string) || "https";
       const host = req.headers.host;
       const localManifestId = `${protocol}://${host}/api/iiif/manifest/${slugValue}?viewer=1`;
-      const viewerManifest = normalizeViewerResource(normalizedManifest);
+      const viewerManifest = await normalizeViewerResource(normalizedManifest);
       viewerManifest.id = localManifestId;
 
       return res.status(200).json(viewerManifest);
