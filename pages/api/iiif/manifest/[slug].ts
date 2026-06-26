@@ -4,6 +4,14 @@ import { normalizeIiifPayload, normalizeIiifUrl } from "@/services/iiif-url";
 
 const loadCanopyJson = <T>(filename: string, fallback: T): T => {
   try {
+    if (filename === "manifests.json") {
+      return require("../../../../.canopy/manifests.json") as T;
+    }
+  } catch (_) {
+    // Fall through to filesystem lookup.
+  }
+
+  try {
     const filePath = path.join(process.cwd(), ".canopy", filename);
     const content = fs.readFileSync(filePath, "utf8");
     return JSON.parse(content) as T;
