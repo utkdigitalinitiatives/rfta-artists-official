@@ -19,34 +19,40 @@ const ISLANDORA_DATASTREAM_RE =
 
 const DATASTREAM_SEGMENT_RE = /\/datastream\/(OBJ|JPG|TN)\b/i;
 const iiifDatastreamCache = new Map<string, string>();
+const SERVICE_DATASTREAM_PREFERENCE = ["OBJ", "JP2", "JPG", "TN"];
 
-const shouldUseObjService = async (resourceId: string) => {
+const resolvePreferredServiceDatastream = async (resourceId: string) => {
   const match = resourceId.match(ISLANDORA_DATASTREAM_RE);
-  if (!match) return false;
+  if (!match) return "JPG";
 
   const [, objectId] = match;
   const decodedObjectId = decodeURIComponent(objectId);
   const cacheKey = decodedObjectId.toLowerCase();
   if (iiifDatastreamCache.has(cacheKey)) {
-    return iiifDatastreamCache.get(cacheKey) === "OBJ";
+    return iiifDatastreamCache.get(cacheKey) || "JPG";
   }
 
-  const objInfoUrl = `https://digital.lib.utk.edu/iiif/2/collections~islandora~object~${decodedObjectId}~datastream~OBJ/info.json`;
+  for (const datastream of SERVICE_DATASTREAM_PREFERENCE) {
+    const infoUrl = `https://digital.lib.utk.edu/iiif/2/collections~islandora~object~${decodedObjectId}~datastream~${datastream}/info.json`;
 
-  try {
-    const response = await fetch(objInfoUrl, {
-      headers: {
-        Accept: "application/json",
-      },
-    });
+    try {
+      const response = await fetch(infoUrl, {
+        headers: {
+          Accept: "application/json",
+        },
+      });
 
-    const resolved = response.ok ? "OBJ" : "JPG";
-    iiifDatastreamCache.set(cacheKey, resolved);
-    return resolved === "OBJ";
-  } catch (error) {
-    iiifDatastreamCache.set(cacheKey, "JPG");
-    return false;
+      if (response.ok) {
+        iiifDatastreamCache.set(cacheKey, datastream);
+        return datastream;
+      }
+    } catch (error) {
+      // Keep trying lower-priority datastreams when upstream errors.
+    }
   }
+
+  iiifDatastreamCache.set(cacheKey, "JPG");
+  return "JPG";
 };
 
 const toImageServiceId = (resourceId: string, datastream: string) => {
@@ -79,10 +85,11 @@ const normalizeViewerResource = async (node: any): Promise<any> => {
   if (normalized.type === "Image" && typeof normalized.id === "string") {
     const match = normalized.id.match(ISLANDORA_DATASTREAM_RE);
     const originalDatastream = match?.[2]?.toUpperCase();
-    const useObjService = await shouldUseObjService(normalized.id);
-    const serviceDatastream = useObjService
-      ? "OBJ"
-      : originalDatastream || "JPG";
+    const resolvedServiceDatastream = await resolvePreferredServiceDatastream(
+      normalized.id,
+    );
+    const serviceDatastream =
+      resolvedServiceDatastream || originalDatastream || "JPG";
     const imageId = normalized.id.replace(
       DATASTREAM_SEGMENT_RE,
       "/datastream/JPG",
