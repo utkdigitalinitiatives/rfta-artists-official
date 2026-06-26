@@ -239,17 +239,27 @@ const normalizeViewerResource = async (node: any): Promise<any> => {
 
     const match = normalized.id.match(ISLANDORA_DATASTREAM_RE);
     const originalDatastream = match?.[2]?.toUpperCase();
+
+    // Keep small thumbnail resources untouched to avoid oversized sidebar images.
+    if (originalDatastream === "TN") {
+      return normalized;
+    }
+
     const resolvedService = await resolvePreferredServiceDatastream(
       normalized.id,
     );
     const serviceDatastream =
       resolvedService.datastream || originalDatastream || "JPG";
+    const imageId = normalized.id.replace(
+      DATASTREAM_SEGMENT_RE,
+      "/datastream/JPG",
+    );
     const serviceId = toImageServiceId(normalized.id, serviceDatastream);
 
     if (serviceId) {
       return {
         ...normalized,
-        id: `${serviceId}/full/full/0/default.jpg`,
+        id: imageId,
         format: "image/jpeg",
         width:
           typeof resolvedService.width === "number"
