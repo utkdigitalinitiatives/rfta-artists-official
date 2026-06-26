@@ -79,10 +79,7 @@ const normalizeViewerResource = async (node: any): Promise<any> => {
   if (normalized.type === "Image" && typeof normalized.id === "string") {
     const match = normalized.id.match(ISLANDORA_DATASTREAM_RE);
     const originalDatastream = match?.[2]?.toUpperCase();
-    const useObjService =
-      originalDatastream === "OBJ"
-        ? await shouldUseObjService(normalized.id)
-        : false;
+    const useObjService = await shouldUseObjService(normalized.id);
     const serviceDatastream = useObjService
       ? "OBJ"
       : originalDatastream || "JPG";
