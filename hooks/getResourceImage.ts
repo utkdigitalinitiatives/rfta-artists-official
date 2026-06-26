@@ -36,21 +36,29 @@ export const getResourceImage = (resource, size = "600,", region = "full") => {
   if (!Array.isArray(resource.service)) {
     if (resource.service["@id"])
       return toImageProxyUrl(
-        normalizeIiifUrl(`${resource.service["@id"]}/${region}/${size}/0/default.jpg`)
+        normalizeIiifUrl(
+          `${resource.service["@id"]}/${region}/${size}/0/default.jpg`,
+        ),
       );
 
     if (resource.service.id)
       return toImageProxyUrl(
-        normalizeIiifUrl(`${resource.service.id}/${region}/${size}/0/default.jpg`)
+        normalizeIiifUrl(
+          `${resource.service.id}/${region}/${size}/0/default.jpg`,
+        ),
       );
   }
 
   if (resource.service[0]["@id"])
     return toImageProxyUrl(
-      normalizeIiifUrl(`${resource.service[0]["@id"]}/${region}/${size}/0/default.jpg`)
+      normalizeIiifUrl(
+        `${resource.service[0]["@id"]}/${region}/${size}/0/default.jpg`,
+      ),
     );
 
   return toImageProxyUrl(
-    normalizeIiifUrl(`${resource.service[0].id}/${region}/${size}/0/default.jpg`)
+    normalizeIiifUrl(
+      `${resource.service[0].id}/${region}/${size}/0/default.jpg`,
+    ),
   );
 };

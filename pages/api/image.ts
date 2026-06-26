@@ -27,7 +27,8 @@ export default async function handler(req, res) {
     }
 
     const contentType = upstream.headers.get("content-type") || "image/jpeg";
-    const cacheControl = upstream.headers.get("cache-control") || "public, max-age=300";
+    const cacheControl =
+      upstream.headers.get("cache-control") || "public, max-age=300";
 
     res.setHeader("Content-Type", contentType);
     res.setHeader("Cache-Control", cacheControl);
