@@ -1,8 +1,22 @@
 import { buildCollection } from "@/services/iiif-builder";
-import CANOPY_MANIFESTS from "../../../../.canopy/manifests.json";
-import CANOPY_METADATA from "../../../../.canopy/metadata.json";
+import fs from "fs";
+import path from "path";
 import absoluteUrl from "next-absolute-url";
 import { normalizeIiifUrl } from "@/services/iiif-url";
+
+const loadCanopyJson = <T>(filename: string, fallback: T): T => {
+  try {
+    const filePath = path.join(process.cwd(), ".canopy", filename);
+    const content = fs.readFileSync(filePath, "utf8");
+    return JSON.parse(content) as T;
+  } catch (error) {
+    console.error(`Failed to load .canopy/${filename}:`, error);
+    return fallback;
+  }
+};
+
+const CANOPY_MANIFESTS = loadCanopyJson<any[]>("manifests.json", []);
+const CANOPY_METADATA = loadCanopyJson<any[]>("metadata.json", []);
 
 const ARTIST_MAP = {
   "paige-rftaart": "Braddock, Paige",

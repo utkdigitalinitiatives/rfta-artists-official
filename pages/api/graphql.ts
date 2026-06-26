@@ -3,9 +3,25 @@ import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { SchemaLink } from "@apollo/client/link/schema";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import slugify from "slugify";
-import CANOPY_COLLECTIONS from "../../.canopy/collections.json";
-import CANOPY_MANIFESTS from "../../.canopy/manifests.json";
-import CANOPY_METADATA from "../../.canopy/metadata.json";
+
+const loadCanopyJson = <T>(filename: string, fallback: T): T => {
+  if (typeof window !== "undefined") return fallback;
+
+  try {
+    const fs = require("fs");
+    const path = require("path");
+    const filePath = path.join(process.cwd(), ".canopy", filename);
+    const content = fs.readFileSync(filePath, "utf8");
+    return JSON.parse(content) as T;
+  } catch (error) {
+    console.error(`Failed to load .canopy/${filename}:`, error);
+    return fallback;
+  }
+};
+
+const CANOPY_COLLECTIONS = loadCanopyJson<any[]>("collections.json", []);
+const CANOPY_MANIFESTS = loadCanopyJson<any[]>("manifests.json", []);
+const CANOPY_METADATA = loadCanopyJson<any[]>("metadata.json", []);
 
 const typeDefs = gql`
   type Query {
