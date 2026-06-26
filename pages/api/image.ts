@@ -18,15 +18,26 @@ export default async function handler(req, res) {
   }
 
   try {
-    const upstream = await fetch(target.toString());
+    const upstream = await fetch(target.toString(), {
+      headers: {
+        Accept: "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
+        "User-Agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+      },
+    });
 
     if (!upstream.ok) {
-      return res
-        .status(upstream.status)
-        .json({ message: `Upstream image request failed: ${upstream.status}` });
+      res.setHeader("Cache-Control", "public, max-age=120");
+      return res.redirect(302, "/images/placeholder.png");
     }
 
     const contentType = upstream.headers.get("content-type") || "image/jpeg";
+    if (!contentType.toLowerCase().startsWith("image/")) {
+      // Upstream may return anti-bot HTML instead of image bytes.
+      res.setHeader("Cache-Control", "public, max-age=120");
+      return res.redirect(302, "/images/placeholder.png");
+    }
+
     const cacheControl =
       upstream.headers.get("cache-control") || "public, max-age=300";
 
@@ -36,8 +47,7 @@ export default async function handler(req, res) {
     const arrayBuffer = await upstream.arrayBuffer();
     return res.status(200).send(Buffer.from(arrayBuffer));
   } catch (error) {
-    return res
-      .status(502)
-      .json({ message: `Failed to proxy image: ${error.message}` });
+    res.setHeader("Cache-Control", "public, max-age=120");
+    return res.redirect(302, "/images/placeholder.png");
   }
 }
