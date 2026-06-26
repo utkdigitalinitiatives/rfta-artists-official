@@ -169,6 +169,41 @@ const toImageServiceId = (resourceId: string, datastream: string) => {
   return `https://digital.lib.utk.edu/iiif/2/collections~islandora~object~${decodedObjectId}~datastream~${imageDatastream}`;
 };
 
+const getCanvasPaintingDimensions = (canvas: any) => {
+  if (!Array.isArray(canvas?.items)) return null;
+
+  for (const page of canvas.items) {
+    if (page?.type !== "AnnotationPage" || !Array.isArray(page?.items))
+      continue;
+
+    for (const annotation of page.items) {
+      const motivation = annotation?.motivation;
+      const isPainting = Array.isArray(motivation)
+        ? motivation.includes("painting")
+        : motivation === "painting";
+
+      if (!isPainting) continue;
+
+      const body = Array.isArray(annotation?.body)
+        ? annotation.body[0]
+        : annotation?.body;
+
+      if (
+        body &&
+        typeof body.width === "number" &&
+        typeof body.height === "number"
+      ) {
+        return {
+          width: body.width,
+          height: body.height,
+        };
+      }
+    }
+  }
+
+  return null;
+};
+
 const normalizeViewerResource = async (node: any): Promise<any> => {
   if (Array.isArray(node))
     return Promise.all(node.map((item) => normalizeViewerResource(item)));
@@ -184,6 +219,18 @@ const normalizeViewerResource = async (node: any): Promise<any> => {
     string,
     any
   >;
+
+  if (normalized.type === "Canvas") {
+    const paintingDimensions = getCanvasPaintingDimensions(normalized);
+
+    if (paintingDimensions) {
+      return {
+        ...normalized,
+        width: paintingDimensions.width,
+        height: paintingDimensions.height,
+      };
+    }
+  }
 
   if (normalized.type === "Image" && typeof normalized.id === "string") {
     if (normalized.service) {
