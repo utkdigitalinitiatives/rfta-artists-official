@@ -4,18 +4,22 @@ import { getJsonByURI } from "@/services/utils";
 import Card from "@/components/Card/Card";
 import { Item } from "@/components/Grid/Grid.styled";
 
-const GridItem = ({ data }) => {
+const GridItem = ({ data, index = 0 }) => {
   const [item, setItem] = useState<any>(null);
 
   useEffect(() => {
-    getJsonByURI(`/api/iiif/manifest/${data.slug}`)
-      .then((json) => {
-        setItem(json);
-      })
-      .catch((err) => {
-        console.error(`Failed to load manifest for ${data.slug}:`, err);
-      });
-  }, [data.slug]);
+    const batchDelay = Math.floor(index / 5) * 400;
+    const timer = setTimeout(() => {
+      getJsonByURI(`/api/iiif/manifest/${data.slug}`)
+        .then((json) => {
+          setItem(json);
+        })
+        .catch((err) => {
+          console.error(`Failed to load manifest for ${data.slug}:`, err);
+        });
+    }, batchDelay);
+    return () => clearTimeout(timer);
+  }, [data.slug, index]);
 
   let resource = null;
 
