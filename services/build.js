@@ -3,18 +3,45 @@ const slugify = require("slugify");
 
 const normalizeIiifUrl = (value) => {
   if (!value || typeof value !== "string") return value;
-  return value.replace(/http:\/\/digital\.lib\.utk\.edu/gi, "https://digital.lib.utk.edu");
+  return value.replace(
+    /http:\/\/digital\.lib\.utk\.edu/gi,
+    "https://digital.lib.utk.edu",
+  );
 };
 
 exports.getRootCollection = (id) =>
   fetch(id).then((response) => response.json());
 
+const fetchManifestWithRetry = async (item, retries = 4, delayMs = 2000) => {
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const result = await axios.get(item.id, { timeout: 30000 });
+      return result.data;
+    } catch (err) {
+      const isRetryable =
+        err.code === "ECONNRESET" ||
+        err.code === "ECONNREFUSED" ||
+        err.code === "ETIMEDOUT" ||
+        err.code === "ENOTFOUND" ||
+        (err.response && err.response.status >= 500);
+      if (attempt < retries && isRetryable) {
+        const wait = delayMs * Math.pow(2, attempt);
+        console.warn(
+          `Retrying ${item.id} (attempt ${attempt + 1}/${retries}) after ${wait}ms — ${err.code || err.message}`,
+        );
+        await new Promise((resolve) => setTimeout(resolve, wait));
+      } else {
+        console.error(
+          `Failed to fetch ${item.id} after ${attempt + 1} attempt(s): ${err.message}`,
+        );
+        return null;
+      }
+    }
+  }
+};
+
 exports.getBulkManifests = async (items, chunkSize) =>
-  await chunks(
-    items,
-    async (item) => axios.get(item.id).then((result) => result.data),
-    chunkSize
-  );
+  await chunks(items, (item) => fetchManifestWithRetry(item), chunkSize);
 
 exports.buildCanopyCollection = (json, depth, parent = null) => {
   if (!json) return null;
@@ -104,7 +131,7 @@ const buildCollectionItems2 = (json, parent) => {
         item.label = getLabel(item.label);
         item.parent = parent;
         return item;
-      })
+      }),
     );
 
   if (json.manifests)
@@ -121,7 +148,7 @@ const buildCollectionItems2 = (json, parent) => {
         item.label = getLabel(item.label);
         item.parent = parent;
         return item;
-      })
+      }),
     );
 
   return {
@@ -192,7 +219,6 @@ exports.getValues = (values, language = "none") => {
    */
   return values[language];
 };
-
 
 function all(items, fn) {
   const promises = items.map((item, index) => {
