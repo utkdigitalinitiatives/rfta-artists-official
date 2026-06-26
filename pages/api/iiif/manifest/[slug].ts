@@ -1,5 +1,18 @@
-import CANOPY_MANIFESTS from "../../../../.canopy/manifests.json";
 import { normalizeIiifPayload, normalizeIiifUrl } from "@/services/iiif-url";
+
+const loadCanopyJson = <T>(filename: string, fallback: T): T => {
+  try {
+    if (filename === "manifests.json") {
+      return require("../../../../.canopy/manifests.json") as T;
+    }
+  } catch (error) {
+    console.error(`Failed to load .canopy/${filename}:`, error);
+  }
+
+  return fallback;
+};
+
+const CANOPY_MANIFESTS = loadCanopyJson<any[]>("manifests.json", []);
 
 const ISLANDORA_DATASTREAM_RE =
   /\/collections\/islandora\/object\/([^/]+)\/datastream\/(OBJ|JPG|TN)\b/i;
