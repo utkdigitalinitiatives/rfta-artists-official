@@ -42,9 +42,8 @@ export const toIiifImageApiUrl = (
 
   const [, objectIdRaw, datastreamRaw] = match;
   const objectId = decodeURIComponent(objectIdRaw);
-  const datastream = datastreamRaw.toUpperCase() === "OBJ"
-    ? "JPG"
-    : datastreamRaw.toUpperCase();
+  const datastream =
+    datastreamRaw.toUpperCase() === "OBJ" ? "JPG" : datastreamRaw.toUpperCase();
 
   return `https://digital.lib.utk.edu/iiif/2/collections~islandora~object~${objectId}~datastream~${datastream}/${region}/${size}/0/default.jpg`;
 };
